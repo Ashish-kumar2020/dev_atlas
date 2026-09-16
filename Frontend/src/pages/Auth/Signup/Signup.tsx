@@ -1,11 +1,11 @@
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
-import devAtlas from "../../assets/devAtlas-icon.svg";
+import devAtlas from "../../../assets/devAtlas-icon.svg";
 import { Eye } from "lucide-react";
 
 const Signup = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#09090B] p-4">
+    <div className="flex min-h-screen items-center justify-center">
       {/* Signup Card */}
       <div className="w-full max-w-115 rounded-[12px] border border-[#FFFFFF1A] bg-[#18181B] p-6">
         {/* Logo & Heading */}
@@ -14,7 +14,7 @@ const Signup = () => {
           <div className="mb-4 flex h-9 items-center gap-2">
             <img src={devAtlas} alt="DevAtlas" className="h-6 w-6" />
 
-            <span className="text-[18px] font-semibold leading-7 tracking-[-0.45px] text-[#155DFC]">
+            <span className="text-[20px] font-semibold leading-7 tracking-[-0.45px] text-[#FAFAFA]">
               DevAtlas
             </span>
           </div>
@@ -45,7 +45,7 @@ const Signup = () => {
             <Input
               id="username"
               type="text"
-              placeholder="ashu.dev"
+              placeholder="john.dev"
               className="h-9 w-full rounded-[8px] border border-[#3A3A3A] bg-[#191919] px-3.25 text-[14px] font-normal leading-[100%] tracking-normal text-[#9F9FA9] outline-none placeholder:text-[#9F9FA9]"
             />
           </div>
@@ -62,7 +62,7 @@ const Signup = () => {
             <Input
               id="email"
               type="email"
-              placeholder="ashu@example.com"
+              placeholder="john@example.com"
               className="h-9 w-full rounded-[8px] border border-[#3A3A3A] bg-[#191919] px-3.25 text-[14px] font-normal leading-[100%] tracking-normal text-[#9F9FA9] outline-none placeholder:text-[#9F9FA9]"
             />
           </div>
@@ -79,7 +79,7 @@ const Signup = () => {
             <Input
               id="password"
               type="password"
-              placeholder="****************"
+              placeholder="Enter your password"
               icon={<Eye size={16} />}
               className="h-9 w-full rounded-[8px] border border-[#3A3A3A] bg-[#191919] px-3.25 pr-10 text-[14px] font-normal leading-[100%] tracking-normal text-[#9F9FA9] outline-none placeholder:text-[#9F9FA9]"
             />
@@ -97,7 +97,7 @@ const Signup = () => {
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="****************"
+              placeholder="Enter your password"
               icon={<Eye size={16} />}
               className="h-9 w-full rounded-[8px] border border-[#3A3A3A] bg-[#191919] px-3.25 pr-10 text-[14px] font-normal leading-[100%] tracking-normal text-[#9F9FA9] outline-none placeholder:text-[#9F9FA9]"
             />
@@ -121,7 +121,7 @@ const Signup = () => {
           {/* Create Account */}
           <button
             type="submit"
-            className="h-9 w-full rounded-[6px] bg-[#155DFC] px-4 text-[14px] font-medium text-[#1C398E]"
+            className="h-9 w-full rounded-[6px] bg-[#155DFC] px-4 text-[14px] font-medium text-black"
           >
             Create account
           </button>
