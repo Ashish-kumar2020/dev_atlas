@@ -19,4 +19,8 @@ authRouter.post("/verify-account", verifyAccountController);
 // FORGOT-PASSWORD Endpoint
 // authRouter.post("/forgot-password", )
 
+// DELETE-ACCOUNT Endpoint
+
+// UPDATE-PASSWORD Endpoint
+
 export default authRouter;
