@@ -1,11 +1,12 @@
 import pool from "../config/db.js";
 
 // LOGIN Service
-export const userLoginDataService = (userName: string, password: string) => {
-  return {
-    userName,
-    password,
-  };
+export const userLoginDataService =async (email: string, password: string) => {
+  const result = await pool.query(
+    `SELECT EXISTS (SELECT 1 FROM USERS WHERE EMAIL = $1 AND PASSWORD = $2)`,
+    [email,password],
+  );
+  return result.rows[0].exists;
 };
 
 // SIGNUP Servive

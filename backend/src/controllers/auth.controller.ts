@@ -6,13 +6,31 @@ import {
 } from "../services/auth.services.js";
 
 // -------------- LOGIN CONTROLLER ---------------------------------
-export const loginController = (req: Request, res: Response) => {
-  const { userName, password } = req.body;
-  const userLoginData = userLoginDataService(userName, password);
-  return res.status(200).json({
-    message: "User LogedIn Successfully",
-    userLoginData,
-  });
+export const loginController = async (req: Request, res: Response) => {
+  try {
+    const {email, password} = req.body;
+    if(!email || !password){
+      return res.status(400).json({
+        message: "All Fields are required"
+      });
+    } 
+
+    const userLoginData = await userLoginDataService(email,password);
+    if(!userLoginData){
+      return res.status(401).json({
+        message: "Invalid email or password"
+      })
+    }
+    return res.status(200).json({
+      message: "User Loggedin Successfully"
+    })
+    
+  } catch (error) {
+   console.log(error);
+   return res.status(500).json({
+    message: "Internal Server Error"
+   }) 
+  }
 };
 
 // -------------- SIGNUP CONTROLLER ---------------------------------
