@@ -17,13 +17,27 @@ export const loginController = (req: Request, res: Response) => {
 
 // -------------- SIGNUP CONTROLLER ---------------------------------
 
-export const signupController = (req: Request, res: Response) => {
-  const { userName, email, password } = req.body;
-  const userSignUpData = userSignUpDataService(userName, email, password);
-  return res.status(201).json({
-    message: "User Profile Created Successfully",
-    userSignUpData,
-  });
+export const signupController =  async (req: Request, res: Response) => {
+    try {
+      const {userName, email, password} = req.body;
+
+      if(!userName || !email || !password){
+        return res.status(400).json({
+          message: "All Fields are required"
+        });
+      }
+
+      const userSignUpData = await userSignUpDataService(userName,email,password);
+      return res.status(201).json({
+        message: "User Created Successfully",
+        userSignUpData
+      })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Internal Server Error",
+      })
+    }
 };
 
 // -------------- VERIFY-ACCOUNT CONTROLLER ----------------------

@@ -1,3 +1,5 @@
+import pool from "../config/db.js";
+
 // LOGIN Service
 export const userLoginDataService = (userName: string, password: string) => {
   return {
@@ -7,16 +9,19 @@ export const userLoginDataService = (userName: string, password: string) => {
 };
 
 // SIGNUP Servive
-export const userSignUpDataService = (
+export const userSignUpDataService = async (
   userName: string,
   email: string,
   password: string,
 ) => {
-  return {
-    userName,
-    email,
-    password,
-  };
+  const result = await pool.query(
+    `INSERT INTO users (user_name, email, password)
+     VALUES ($1, $2, $3)
+     RETURNING id, user_name, email
+    `,
+    [userName,email,password],
+  );
+  return result.rows[0];
 };
 
 // Verify Service - OTP
