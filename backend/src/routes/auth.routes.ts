@@ -1,7 +1,9 @@
 import express from "express";
 import {
+  forgotPasswordController,
   loginController,
   signupController,
+  updatePasswordController,
   verifyAccountController,
 } from "../controllers/auth.controller.js";
 
@@ -17,10 +19,10 @@ authRouter.post("/signup", signupController);
 authRouter.post("/verify-account", verifyAccountController);
 
 // FORGOT-PASSWORD Endpoint
-// authRouter.post("/forgot-password", )
-
-// DELETE-ACCOUNT Endpoint
+authRouter.post("/forgot-password", forgotPasswordController)
 
 // UPDATE-PASSWORD Endpoint
+authRouter.post("/update-password", updatePasswordController)
 
+// DELETE-ACCOUNT Endpoint
 export default authRouter;
