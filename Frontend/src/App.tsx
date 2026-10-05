@@ -5,7 +5,8 @@ import Login from "./pages/Auth/Login/Login";
 import AccountVerify from "./pages/Auth/account-verify/AccountVerify";
 import PasswordReset from "./pages/Auth/reset-password/PasswordReset";
 import UpdatePassword from "./pages/Auth/update-password/UpdatePassword";
-import MainLayout from "./pages/Dashboard/MainLayout";
+import MainLayout from "./pages/MainLayout";
+// import Dashboard from "./pages/Dashboard/Dashboard";
 
 
 const router = createBrowserRouter([
@@ -31,7 +32,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <MainLayout/>
+    element: <MainLayout/>,
+    // children: [
+    //   {
+    //     index: true,
+    //     element: <Dashboard/>
+    //   }
+    // ]
   }
 ]);
 

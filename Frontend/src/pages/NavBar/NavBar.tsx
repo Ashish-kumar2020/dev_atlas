@@ -5,7 +5,7 @@ import {
   Sparkles, 
 } from "lucide-react";
 
-import devAtlasIcon from "../../../assets/devAtlas-icon.svg";
+import devAtlasIcon from "../../assets/devAtlas-icon.svg";
 
 const Navbar = () => {
   return (
