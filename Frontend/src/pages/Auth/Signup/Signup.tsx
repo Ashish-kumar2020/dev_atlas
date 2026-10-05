@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import devAtlas from "../../../assets/devAtlas-icon.svg";
-import AuthLeftScreen from "@/common-components/AuthLeftScreen";
+import AuthLeftScreen from "@/commonui/AuthLeftScreen";
 import { Github } from "@/assets/icons/Icons";
 
 const Signup = () => {

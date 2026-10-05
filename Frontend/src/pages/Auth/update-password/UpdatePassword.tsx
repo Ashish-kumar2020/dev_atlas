@@ -3,7 +3,7 @@ import { ArrowRight, Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
 
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
-import AuthLeftScreen from "@/common-components/AuthLeftScreen";
+import AuthLeftScreen from "@/commonui/AuthLeftScreen";
 
 const UpdatePassword = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
