@@ -12,7 +12,9 @@ const MainLayout = () => {
         <Sidebar />
 
         <main className="min-w-0 flex-1 overflow-x-hidden">
-          <Outlet />
+          <div className="mx-auto w-full max-w-362.5 px-6 py-8 lg:px-8 xl:px-10">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

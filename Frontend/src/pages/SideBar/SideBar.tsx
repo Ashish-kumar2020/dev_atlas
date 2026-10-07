@@ -8,6 +8,7 @@ import {
   Lightbulb,
   Settings,
   Zap,
+  Notebook
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -15,8 +16,13 @@ import { NavLink } from "react-router-dom";
 const mainNavigation = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/home",
     icon: Home,
+  },
+  {
+    title: "Notes",
+    url: "/home/notes",
+    icon: Notebook,
   },
   {
     title: "Subjects",
@@ -25,12 +31,12 @@ const mainNavigation = [
   },
   {
     title: "Topics",
-    url: "/topics",
+    url: "/home/topics",
     icon: FolderKanban,
   },
   {
     title: "Bookmarks",
-    url: "/bookmarks",
+    url: "/home/bookmarks",
     icon: Bookmark,
   },
   {

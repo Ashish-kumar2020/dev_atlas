@@ -1,4 +1,3 @@
-
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Signup from "./pages/Auth/Signup/Signup";
 import Login from "./pages/Auth/Login/Login";
@@ -6,8 +5,11 @@ import AccountVerify from "./pages/Auth/account-verify/AccountVerify";
 import PasswordReset from "./pages/Auth/reset-password/PasswordReset";
 import UpdatePassword from "./pages/Auth/update-password/UpdatePassword";
 import MainLayout from "./pages/MainLayout";
+import DashBoard from "./pages/Dashboard/DashBoard";
+import Notes from "./pages/Notes/Notes";
+import Topics from "./pages/Topics/Topics";
+import Bookmarks from "./pages/Bookmark/Bookmarks";
 // import Dashboard from "./pages/Dashboard/Dashboard";
-
 
 const router = createBrowserRouter([
   {
@@ -32,14 +34,26 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <MainLayout/>,
-    // children: [
-    //   {
-    //     index: true,
-    //     element: <Dashboard/>
-    //   }
-    // ]
-  }
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashBoard />,
+      },
+      {
+        path: "notes",
+        element: <Notes/>
+      },
+      {
+        path: "topics",
+        element: <Topics/>
+      },
+      {
+        path: "bookmarks",
+        element: <Bookmarks/>
+      }
+    ],
+  },
 ]);
 
 function App() {
