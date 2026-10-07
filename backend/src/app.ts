@@ -2,11 +2,14 @@ import express, { type Request, type Response } from "express";
 import notesRouter from "./routes/notes.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import subjectRouter from "./routes/subjects.routes.js";
+import topicRouter from "./routes/topics.routes.js";
+
 const app = express();
 app.use(express.json());
 app.use("/notes", notesRouter);
 app.use("/auth", authRouter);
-app.use("/subject", subjectRouter)
+app.use("/subject", subjectRouter);
+app.use("/topic",topicRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to DevAtlas API");
