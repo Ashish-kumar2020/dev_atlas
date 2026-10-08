@@ -12,7 +12,6 @@ export const createNotesService = async (
       `,
     [title, description, topic_id],
   );
-
   return result.rows[0];
 };
 
@@ -46,20 +45,4 @@ export const fetchAllNotesService = async () => {
     await pool.query(`SELECT notes.id AS note_id,notes.title AS note_title,notes.description AS note_description,topics.id AS topic_id,topics.topic_name AS topic_name, subjects.id AS subject_id,subjects.subject_name AS subject_name FROM notes INNER JOIN topics ON notes.topic_id = topics.id INNER JOIN subjects
 ON topics.subject_id = subjects.id; `);
   return result.rows;
-};
-
-export const fetchUniqueNotesService = (noteId: string) => {
-  return {
-    id: noteId,
-  };
-};
-
-export const fetchQueriedNotesService = (
-  tagReceived: string,
-  limit: string,
-) => {
-  return {
-    tagReceived,
-    limit,
-  };
 };

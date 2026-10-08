@@ -3,8 +3,6 @@ import {
   createNotesService,
   deleteNoteService,
   fetchAllNotesService,
-  fetchQueriedNotesService,
-  fetchUniqueNotesService,
   updateNotesService,
 } from "../services/notes.service.js";
 
@@ -116,32 +114,3 @@ export const fetchAllNotesController = async(req: Request, res: Response) => {
     })
   }
 }
-
-export const fetchUniqueNotes = (req: Request, res: Response) => {
-  const noteId = req.params.id;
-  if (typeof noteId !== "string") {
-    return res.status(400).json({
-      message: "Invalid note ID",
-    });
-  }
-  const getUniqueNotes = fetchUniqueNotesService(noteId);
-  res.json({
-    message: "Note fetched successfully",
-    noteId: getUniqueNotes,
-  });
-};
-
-export const fetchQueriedNotes = (req: Request, res: Response) => {
-  const tagReceived = req.query.tag;
-  const limit = req.query.limit;
-  if (typeof limit !== "string" || typeof tagReceived !== "string") {
-    return res.status(400).json({
-      message: "Invalid Note Id",
-    });
-  }
-  const queryNotesService = fetchQueriedNotesService(tagReceived, limit);
-  res.json({
-    message: "Note fetched successfully",
-    queryNotesService,
-  });
-};
