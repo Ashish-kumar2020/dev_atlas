@@ -49,22 +49,17 @@ const mainNavigation = [
 const practiceNavigation = [
   {
     title: "Questions",
-    url: "/questions",
+    url: "/home/questions",
     icon: Lightbulb,
   },
   {
     title: "Quiz",
-    url: "/quiz",
+    url: "/home/quiz",
     icon: FileText,
   },
   {
-    title: "Flashcards",
-    url: "/flashcards",
-    icon: Bookmark,
-  },
-  {
     title: "Interview Mode",
-    url: "/interview",
+    url: "/home/interview",
     icon: Zap,
   },
   {
@@ -87,12 +82,12 @@ const learningNavigation = [
   },
   {
     title: "Progress",
-    url: "/progress",
+    url: "/home/progress",
     icon: BarChart3,
   },
   {
     title: "Revision",
-    url: "/revision",
+    url: "/home/revision",
     icon: FileText,
   },
 ];
@@ -100,24 +95,14 @@ const learningNavigation = [
 const productivityNavigation = [
   {
     title: "Tasks",
-    url: "/tasks",
+    url: "/home/tasks",
     icon: FileText,
-  },
-  {
-    title: "Journal",
-    url: "/journal",
-    icon: FileText,
-  },
-  {
-    title: "Projects",
-    url: "/projects",
-    icon: FolderKanban,
   },
   {
     title: "Analytics",
-    url: "/analytics",
+    url: "/home/analytics",
     icon: BarChart3,
-  },
+  }
 ];
 
 const SidebarSection = ({
@@ -226,7 +211,7 @@ const Sidebar = () => {
 
         <div className="mt-8 border-t border-white/6 pt-4">
           <NavLink
-            to="/settings"
+            to="/home/settings"
             className={({ isActive }) =>
               `
               flex

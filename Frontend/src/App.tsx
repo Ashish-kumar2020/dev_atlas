@@ -9,6 +9,15 @@ import DashBoard from "./pages/Dashboard/DashBoard";
 import Notes from "./pages/Notes/Notes";
 import Topics from "./pages/Topics/Topics";
 import Bookmarks from "./pages/Bookmark/Bookmarks";
+import Question from "./pages/Questions/Question";
+import Quiz from "./pages/Quiz/Quiz";
+import InterviewMode from "./pages/Interview/InterviewMode";
+import Progress from "./pages/Progress/Progress";
+import Revision from "./pages/Revision/Revision";
+import Tasks from "./pages/Task/Tasks";
+import Analytics from "./pages/Analytics/AnalyticsPage";
+import Settings from "./pages/Settings/Settings";
+
 // import Dashboard from "./pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
@@ -51,6 +60,38 @@ const router = createBrowserRouter([
       {
         path: "bookmarks",
         element: <Bookmarks/>
+      },
+      {
+        path: "questions",
+        element: <Question/>
+      },
+      {
+        path: "quiz",
+        element: <Quiz/>
+      },
+      {
+        path: "interview",
+        element: <InterviewMode/>
+      },
+      {
+        path: "progress",
+        element: <Progress/>
+      },
+      {
+        path: "revision",
+        element: <Revision/>
+      },
+      {
+        path: "tasks",
+        element: <Tasks/>
+      },
+      {
+        path:"analytics",
+        element: <Analytics/>
+      },
+      {
+        path: "settings",
+        element: <Settings/>
       }
     ],
   },
