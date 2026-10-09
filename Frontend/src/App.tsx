@@ -17,6 +17,7 @@ import Revision from "./pages/Revision/Revision";
 import Tasks from "./pages/Task/Tasks";
 import Analytics from "./pages/Analytics/AnalyticsPage";
 import Settings from "./pages/Settings/Settings";
+import CodePlayground from "./pages/CodeEditior/CodePlayground";
 
 // import Dashboard from "./pages/Dashboard/Dashboard";
 
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings/>
+      },
+      {
+        path: "playground",
+        element: <CodePlayground/>
       }
     ],
   },

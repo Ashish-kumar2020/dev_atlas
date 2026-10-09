@@ -64,7 +64,7 @@ const practiceNavigation = [
   },
   {
     title: "Code Playground",
-    url: "/playground",
+    url: "/home/playground",
     icon: FolderKanban,
   },
 ];
