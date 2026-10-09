@@ -6,7 +6,7 @@ import PasswordReset from "./pages/Auth/reset-password/PasswordReset";
 import UpdatePassword from "./pages/Auth/update-password/UpdatePassword";
 import MainLayout from "./pages/MainLayout";
 import DashBoard from "./pages/Dashboard/DashBoard";
-import Notes from "./pages/Notes/Notes";
+// import Notes from "./pages/Notes/Notes";
 import Topics from "./pages/Topics/Topics";
 import Bookmarks from "./pages/Bookmark/Bookmarks";
 import Question from "./pages/Questions/Question";
@@ -18,6 +18,7 @@ import Tasks from "./pages/Task/Tasks";
 import Analytics from "./pages/Analytics/AnalyticsPage";
 import Settings from "./pages/Settings/Settings";
 import CodePlayground from "./pages/CodeEditior/CodePlayground";
+import NotesInput from "./pages/Notes/NotesInput";
 
 // import Dashboard from "./pages/Dashboard/Dashboard";
 
@@ -52,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "notes",
-        element: <Notes/>
+        element: <NotesInput/>
       },
       {
         path: "topics",
