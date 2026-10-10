@@ -6,6 +6,9 @@ import topicRouter from "./routes/topics.routes.js";
 import bookmarkRouter from "./routes/bookmarks.routes.js";
 import bookmarkCategoryRouter from "./routes/bookmark_category.routes.js";
 import taskRouter from "./routes/task_management.routes.js";
+import favouriteRouter from "./routes/favourite.routes.js";
+import profileRouter from "./routes/profile.routes.js";
+import revisionRouter from "./routes/revision.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -16,6 +19,10 @@ app.use("/topic",topicRouter);
 app.use("/bookmark",bookmarkRouter);
 app.use("/bookmark-category", bookmarkCategoryRouter);
 app.use("/task",taskRouter)
+app.use("/favourite", favouriteRouter);
+app.use("/profile",profileRouter);
+app.use("/revision", revisionRouter);
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to DevAtlas API");
