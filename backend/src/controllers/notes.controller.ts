@@ -18,7 +18,7 @@ export const createNoteController = async (req: Request, res: Response) => {
 
     const notesData = await createNotesService(title, description, topic_id);
     if (!notesData) {
-      return res.status(400).json({
+      return res.status(404).json({
         message: "Error while creating the notes",
       });
     }
@@ -98,7 +98,7 @@ export const fetchAllNotesController = async(req: Request, res: Response) => {
     const allNotesData = await fetchAllNotesService();
 
     if(allNotesData.length === 0){
-      return res.status(404).json({
+      return res.status(200).json({
         message: "No Notes found"
       });
     }
