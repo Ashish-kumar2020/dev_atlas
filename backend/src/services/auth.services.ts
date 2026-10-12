@@ -11,7 +11,7 @@ export const userLoginDataService =async (email: string, password: string) => {
 
 // SIGNUP Servive
 export const userSignUpDataService = async (
-  userName: string,
+  user_name: string,
   email: string,
   password: string,
 ) => {
@@ -20,7 +20,7 @@ export const userSignUpDataService = async (
      VALUES ($1, $2, $3)
      RETURNING id, user_name, email
     `,
-    [userName,email,password],
+    [user_name,email,password],
   );
   return result.rows[0];
 };

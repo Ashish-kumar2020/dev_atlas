@@ -1,15 +1,70 @@
 import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import devAtlas from "../../../assets/devAtlas-icon.svg";
 import AuthLeftScreen from "@/commonui/AuthLeftScreen";
 import { Github } from "@/assets/icons/Icons";
+import type { SignupFormValues } from "../types/auth.types";
+import { signupSchema } from "../schemas/signup.schema";
+import { signupApi } from "../auth.api";
+import { toast } from "sonner";
+import { AUTH_MESSAGES } from "@/constants/messages";
+import { handleApiError } from "@/api/handleApiError";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [userData, setUserData] = useState<SignupFormValues>({
+    user_name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof SignupFormValues, string>>
+  >({});
+
+  const navigate = useNavigate();
+
+  const handleSignupData = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const result = signupSchema.safeParse(userData);
+
+      if (!result.success) {
+        const fieldErrors = result.error.flatten().fieldErrors;
+
+        setErrors({
+          user_name: fieldErrors.user_name?.[0],
+          email: fieldErrors.email?.[0],
+          password: fieldErrors.password?.[0],
+          confirmPassword: fieldErrors.confirmPassword?.[0],
+        });
+
+        return;
+      }
+
+      setErrors({});
+      setIsLoading(true);
+      const signupPayload = {
+        user_name: result.data.user_name,
+        email: result.data.email,
+        password: result.data.password,
+      };
+      const response = await signupApi(signupPayload);
+      // Addd router
+      console.log(response);
+      toast.success(AUTH_MESSAGES.SIGNUP_SUCCESS);
+      navigate("/login");
+    } catch (error: unknown) {
+      toast.error(handleApiError(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#070B12] text-[#FAFAFA]">
@@ -82,10 +137,10 @@ const Signup = () => {
               </p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSignupData}>
               <div className="space-y-1.5">
                 <Label
-                  htmlFor="username"
+                  htmlFor="user_name"
                   className="
                     block
                     text-[13px]
@@ -109,9 +164,16 @@ const Signup = () => {
                   />
 
                   <Input
-                    id="username"
+                    id="user_name"
                     type="text"
                     placeholder="john.dev"
+                    value={userData.user_name}
+                    onChange={(e) =>
+                      setUserData((prev) => ({
+                        ...prev,
+                        user_name: e.target.value,
+                      }))
+                    }
                     className="
                       h-10
                       w-full
@@ -132,6 +194,9 @@ const Signup = () => {
                     "
                   />
                 </div>
+                {errors.user_name && (
+                  <p className="text-xs text-red-400">{errors.user_name}</p>
+                )}
 
                 <p className="text-[11px] text-[#52525B]">
                   This will be your public identity.
@@ -167,6 +232,13 @@ const Signup = () => {
                     id="email"
                     type="email"
                     placeholder="john@example.com"
+                    value={userData.email}
+                    onChange={(e) =>
+                      setUserData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     className="
                       h-10
                       w-full
@@ -187,6 +259,9 @@ const Signup = () => {
                     "
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-xs text-red-400">{errors.email}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -218,6 +293,13 @@ const Signup = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
+                    value={userData.password}
+                    onChange={(e) =>
+                      setUserData((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                     className="
                       h-10
                       w-full
@@ -254,6 +336,9 @@ const Signup = () => {
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-xs text-red-400">{errors.password}</p>
+                )}
               </div>
 
               <div className="space-y-1.5">
@@ -285,6 +370,13 @@ const Signup = () => {
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
+                    value={userData.confirmPassword}
+                    onChange={(e) =>
+                      setUserData((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
                     className="
                       h-10
                       w-full
@@ -325,6 +417,11 @@ const Signup = () => {
                     )}
                   </button>
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-xs text-red-400">
+                    {errors.confirmPassword}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-start gap-2.5 pt-1">
@@ -364,7 +461,9 @@ const Signup = () => {
 
               <button
                 type="submit"
+                disabled={isLoading}
                 className="
+                  cursor-pointer
                   group
                   flex
                   h-10
@@ -384,7 +483,7 @@ const Signup = () => {
                   active:scale-[0.99]
                 "
               >
-                Create account
+                {isLoading ? "Creating Account..." : "Create account"}
                 <ArrowRight
                   size={16}
                   className="
@@ -454,19 +553,11 @@ const Signup = () => {
 
             <p className="mt-6 text-center text-[12px] text-[#71717A]">
               Already have an account?{" "}
-              <Link to="/login">
-                <button
-                  type="button"
-                  className="
-                  font-medium
-                  text-[#3B82F6]
-                  transition
-                  hover:text-[#60A5FA]
-                  cursor-pointer
-                "
-                >
-                  Log in
-                </button>
+              <Link
+                to="/login"
+                className="cursor-pointer font-medium text-[#3B82F6] transition hover:text-[#60A5FA]"
+              >
+                Log in
               </Link>
             </p>
           </div>

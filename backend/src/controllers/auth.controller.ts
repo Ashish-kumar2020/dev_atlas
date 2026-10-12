@@ -39,15 +39,15 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const signupController =  async (req: Request, res: Response) => {
     try {
-      const {userName, email, password} = req.body;
+      const {user_name, email, password} = req.body;
 
-      if(!userName || !email || !password){
+      if(!user_name || !email || !password){
         return res.status(400).json({
           message: "All Fields are required"
         });
       }
 
-      const userSignUpData = await userSignUpDataService(userName,email,password);
+      const userSignUpData = await userSignUpDataService(user_name,email,password);
       return res.status(201).json({
         message: "User Created Successfully",
         userSignUpData

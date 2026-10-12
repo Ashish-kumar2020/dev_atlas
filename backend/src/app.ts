@@ -9,8 +9,15 @@ import taskRouter from "./routes/task_management.routes.js";
 import favouriteRouter from "./routes/favourite.routes.js";
 import profileRouter from "./routes/profile.routes.js";
 import revisionRouter from "./routes/revision.routes.js";
-
+import cors from "cors";
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
 app.use("/notes", notesRouter);
 app.use("/auth", authRouter);

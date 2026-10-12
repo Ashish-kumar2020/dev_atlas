@@ -19,7 +19,7 @@ import Analytics from "./pages/Analytics/AnalyticsPage";
 import Settings from "./pages/Settings/Settings";
 import CodePlayground from "./pages/CodeEditior/CodePlayground";
 import NotesInput from "./pages/Notes/NotesInput";
-
+import { Toaster } from "../@/components/ui/sonner";
 // import Dashboard from "./pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
@@ -104,7 +104,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
+  );
 }
 
 export default App;
+
+
