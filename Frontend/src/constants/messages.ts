@@ -12,4 +12,7 @@ export const AUTH_MESSAGES = {
   PASSWORD_MISMATCH: "Passwords do not match.",
   NETWORK_ERROR: "Unable to connect. Please check your internet connection.",
   SERVER_ERROR: "Something went wrong on the server. Please try again.",
+  ALL_FIELDS_REQUIRED:"All Fields are mandatory"
 } as const;
+
+

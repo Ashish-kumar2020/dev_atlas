@@ -60,7 +60,7 @@ const Signup = () => {
       toast.success(AUTH_MESSAGES.SIGNUP_SUCCESS);
       navigate("/login");
     } catch (error: unknown) {
-      toast.error(handleApiError(error));
+      toast.error(handleApiError(error,AUTH_MESSAGES.SIGNUP_FAILED));
     } finally {
       setIsLoading(false);
     }

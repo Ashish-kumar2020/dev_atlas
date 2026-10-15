@@ -1,15 +1,61 @@
 import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import Input from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import devAtlas from "../../../assets/devAtlas-icon.svg";
 import AuthLeftScreen from "../../../commonui/AuthLeftScreen";
 import { Github } from "@/assets/icons/Icons";
+import type { LoginPayload } from "../types/auth.types";
+import { loginSchema, type LoginFormValues } from "../schemas/login.schema";
+import { toast } from "sonner";
+import { handleApiError } from "@/api/handleApiError";
+import { loginApi } from "../auth.api";
+import { AUTH_MESSAGES } from "@/constants/messages";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginDetails , setLoginDetails] = useState<LoginPayload>({
+    email: "",
+    password: ""
+  });
+   const [errors, setErrors] = useState<
+      Partial<Record<keyof LoginFormValues, string>>
+    >({});
+    const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLoginDetails = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const result = loginSchema.safeParse(loginDetails);
+      if(!result.success){
+        const fieldErrors = result.error.flatten().fieldErrors;
+        setErrors({
+          email: fieldErrors.email?.[0],
+          password : fieldErrors.password?.[0]
+        });
+        return;
+      }
+      setErrors({});
+      setIsLoading(true);
+      const loginPayload = {
+        email: result.data.email,
+        password: result.data.password
+      }
+      const response = await loginApi(loginPayload);
+      console.log(response);
+      toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
+      navigate("/home");
+    } catch (error) {
+      console.log(error)
+      toast.error(handleApiError(error,AUTH_MESSAGES.LOGIN_FAILED));
+    }finally{
+      setIsLoading(false);
+    }
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#070B12] text-[#FAFAFA]">
@@ -76,7 +122,7 @@ const Login = () => {
               </p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleLoginDetails}>
               <div className="space-y-1.5">
                 <Label
                   htmlFor="email"
@@ -106,6 +152,11 @@ const Login = () => {
                     id="email"
                     type="email"
                     placeholder="john@example.com"
+                    value={loginDetails.email}
+                    onChange={(e) => setLoginDetails((prev) => ({
+                      ...prev,
+                      email: e.target.value
+                    }))}
                     className="
                       h-10
                       w-full
@@ -126,6 +177,9 @@ const Login = () => {
                     "
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-xs text-red-400">{errors.email}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label
@@ -156,6 +210,11 @@ const Login = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
+                    value={loginDetails.password} 
+                    onChange={(e) => setLoginDetails((prev) => ({
+                      ...prev,
+                      password : e.target.value
+                    }))}
                     className="
                       h-10
                       w-full
@@ -193,6 +252,9 @@ const Login = () => {
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-xs text-red-400">{errors.password}</p>
+                )}
               </div>
               <div className="flex items-center justify-between pt-1">
                 <label
@@ -241,6 +303,7 @@ const Login = () => {
               </div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="
                   group
                   flex
@@ -262,7 +325,7 @@ const Login = () => {
                   active:scale-[0.99]
                 "
               >
-                Login
+                {isLoading ? "Verifying Details...." : "Login"}
                 <ArrowRight
                   size={16}
                   className="

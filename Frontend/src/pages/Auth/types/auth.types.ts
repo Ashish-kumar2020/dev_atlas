@@ -16,3 +16,14 @@ export type SignupFormValues = {
   password: string;
   confirmPassword: string;
 };
+
+// ---------------------------------------------- LOGIN TYPES -----------------------------------------
+
+export type LoginPayload = {
+  email: string;
+  password: string;
+}
+
+export type LoginApiResponse = {
+  message: string;
+};
