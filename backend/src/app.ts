@@ -11,6 +11,7 @@ import profileRouter from "./routes/profile.routes.js";
 import revisionRouter from "./routes/revision.routes.js";
 import cors from "cors";
 import progressTrackerRouter from "./routes/progress_tracker.routes.js";
+import otpRouter from "./routes/otp.routes.js";
 const app = express();
 app.use(
   cors({
@@ -31,6 +32,7 @@ app.use("/favourite", favouriteRouter);
 app.use("/profile",profileRouter);
 app.use("/revision", revisionRouter);
 app.use("/progress", progressTrackerRouter);
+app.use("/otp", otpRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to DevAtlas API");
