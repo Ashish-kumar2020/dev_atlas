@@ -12,6 +12,8 @@ import { signupApi } from "../auth.api";
 import { toast } from "sonner";
 import { AUTH_MESSAGES } from "@/constants/messages";
 import { handleApiError } from "@/api/handleApiError";
+import { GENERIC_MESSAGE } from "@/constants/generic.constant";
+import { ROUTE } from "@/constants/routes.constant";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +30,13 @@ const Signup = () => {
   >({});
 
   const navigate = useNavigate();
+
+  const userSignUpDetails = (fieldName: keyof SignupFormValues, value: string) =>{
+    setUserData((prev)=>({
+      ...prev,
+      [fieldName] : value
+    }))
+  }
 
   const handleSignupData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +67,7 @@ const Signup = () => {
       // Addd router
       console.log(response);
       toast.success(AUTH_MESSAGES.SIGNUP_SUCCESS);
-      navigate("/login");
+      navigate(ROUTE.LOGIN);
     } catch (error: unknown) {
       toast.error(handleApiError(error,AUTH_MESSAGES.SIGNUP_FAILED));
     } finally {
@@ -168,12 +177,7 @@ const Signup = () => {
                     type="text"
                     placeholder="john.dev"
                     value={userData.user_name}
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        user_name: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => userSignUpDetails(GENERIC_MESSAGE.USER_NAME,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -233,12 +237,7 @@ const Signup = () => {
                     type="email"
                     placeholder="john@example.com"
                     value={userData.email}
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => userSignUpDetails(GENERIC_MESSAGE.EMAIL,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -294,12 +293,7 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={userData.password}
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        password: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => userSignUpDetails(GENERIC_MESSAGE.PASSWORD,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -371,12 +365,7 @@ const Signup = () => {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     value={userData.confirmPassword}
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        confirmPassword: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => userSignUpDetails(GENERIC_MESSAGE.CONFIRM_PASSWORD,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -554,7 +543,7 @@ const Signup = () => {
             <p className="mt-6 text-center text-[12px] text-[#71717A]">
               Already have an account?{" "}
               <Link
-                to="/login"
+                to={ROUTE.LOGIN}
                 className="cursor-pointer font-medium text-[#3B82F6] transition hover:text-[#60A5FA]"
               >
                 Log in

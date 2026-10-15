@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { handleApiError } from "@/api/handleApiError";
 import { loginApi } from "../auth.api";
 import { AUTH_MESSAGES } from "@/constants/messages";
+import { GENERIC_MESSAGE } from "@/constants/generic.constant";
+import { ROUTE } from "@/constants/routes.constant";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +28,13 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const userLoginDetails = (fieldName: keyof LoginPayload,value: string) => {
+    setLoginDetails((prev) => ({
+      ...prev,
+      [fieldName]:  value
+    }))
+  }
 
   const handleLoginDetails = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +57,7 @@ const Login = () => {
       const response = await loginApi(loginPayload);
       console.log(response);
       toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
-      navigate("/home");
+      navigate(ROUTE.HOME);
     } catch (error) {
       console.log(error)
       toast.error(handleApiError(error,AUTH_MESSAGES.LOGIN_FAILED));
@@ -153,10 +162,7 @@ const Login = () => {
                     type="email"
                     placeholder="john@example.com"
                     value={loginDetails.email}
-                    onChange={(e) => setLoginDetails((prev) => ({
-                      ...prev,
-                      email: e.target.value
-                    }))}
+                    onChange={(e) => userLoginDetails(GENERIC_MESSAGE.EMAIL,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -211,10 +217,7 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={loginDetails.password} 
-                    onChange={(e) => setLoginDetails((prev) => ({
-                      ...prev,
-                      password : e.target.value
-                    }))}
+                   onChange={(e) => userLoginDetails(GENERIC_MESSAGE.PASSWORD,e.target.value)}
                     className="
                       h-10
                       w-full
@@ -288,7 +291,7 @@ const Login = () => {
                 </label>
 
                 <Link
-                  to="/reset-password"
+                  to={ROUTE.RESET_PASSWORD}
                   className="
                     cursor-pointer
                     text-[11px]
@@ -403,7 +406,7 @@ const Login = () => {
             <p className="mt-6 text-center text-[12px] text-[#71717A]">
               Don't have an account?{" "}
               <Link
-                to="/"
+                to={ROUTE.SIGNUP}
                 className="
                   cursor-pointer
                   font-medium
