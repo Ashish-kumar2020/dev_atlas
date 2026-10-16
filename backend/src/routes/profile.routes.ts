@@ -9,6 +9,6 @@ const profileRouter = express.Router();
 
 profileRouter.post("/", createProfileController);
 profileRouter.get("/:user_id", fetchProfileController);
-profileRouter.patch("/:user_id", updateProfileController);
+profileRouter.patch("/", updateProfileController);
 
 export default profileRouter;

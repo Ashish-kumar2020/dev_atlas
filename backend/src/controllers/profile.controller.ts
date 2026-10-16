@@ -94,13 +94,13 @@ export const updateProfileController = async (
   res: Response
 ) => {
   try {
-    const { user_id } = req.params;
+    // const { user_id } = req.params;
 
-    if (typeof user_id !== "string") {
-      return res.status(400).json({
-        message: "User ID is required",
-      });
-    }
+    // if (typeof user_id !== "string") {
+    //   return res.status(400).json({
+    //     message: "User ID is required",
+    //   });
+    // }
 
     const {
       user_name,
@@ -111,6 +111,7 @@ export const updateProfileController = async (
       total_experience_months,
       linkedin_url,
       github_url,
+      user_id
     } = req.body;
 
     const updatedProfile = await updateProfileService(user_id, {

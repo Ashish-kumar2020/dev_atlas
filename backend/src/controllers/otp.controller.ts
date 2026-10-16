@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { sendOTPService } from "../services/otp.service.js";
+import { sendOTPService, verifyOTP } from "../services/otp.service.js";
 
 export const sendOTPController = async (req: Request, res: Response) => {
   try {
@@ -19,9 +19,35 @@ export const sendOTPController = async (req: Request, res: Response) => {
       return res.status(429).json({
         message: error.message,
       });
-      console.error("Send OTP error:", error);
+    console.error("Send OTP error:", error);
     return res.status(500).json({
       message: "Internal Server Error",
+    });
+  }
+};
+
+export const verifyOTPController = async (req: Request, res: Response) => {
+  try {
+    const { user_id, otp } = req.body;
+    if (!user_id || !otp) {
+      return res.status(400).json({
+        message: "All fields are mandatory",
+      });
+    }
+    await verifyOTP(user_id, otp);
+    return res.status(200).json({
+      message: "User verified successfully",
+    });
+  } catch (error) {
+    if (error instanceof Error && "statusCode" in error) {
+      const statusCode = (error as Error & { statusCode: number }).statusCode;
+      return res.status(statusCode).json({
+        message: error.message,
+      });
+    }
+    console.error("Verify OTP error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
     });
   }
 };

@@ -65,3 +65,58 @@ export const sendOTPService = async (user_id: string, email: string) => {
 
   return { message: "OTP sent successfully" };
 };
+
+export const verifyOTP = async (user_id: string, otp: string) => {
+  const result = await pool.query(
+    `SELECT id, otp_hash, expires_at, attempts
+     FROM email_otps
+     WHERE user_id = $1
+     ORDER BY created_at DESC
+     LIMIT 1`,
+    [user_id],
+  );
+
+  if (result.rows.length === 0) {
+    throw Object.assign(
+      new Error("OTP not found. Please request a new OTP."),
+      { statusCode: 400 },
+    );
+  }
+
+  const otpRecord = result.rows[0];
+  const expiresAt = new Date(otpRecord.expires_at).getTime();
+
+  if (Date.now() >= expiresAt) {
+    throw Object.assign(
+      new Error("OTP has expired. Please request a new OTP."),
+      { statusCode: 400 },
+    );
+  }
+
+  if (otpRecord.attempts >= 5) {
+    throw Object.assign(
+      new Error("Maximum OTP attempts reached. Please request a new OTP."),
+      { statusCode: 429 },
+    );
+  }
+
+  const userOTP = hashOTP(otp);
+
+  if (userOTP !== otpRecord.otp_hash) {
+    await pool.query(
+      `UPDATE email_otps SET attempts = attempts + 1 WHERE id = $1`,
+      [otpRecord.id],
+    );
+
+    throw Object.assign(new Error("Invalid OTP."), { statusCode: 400 });
+  }
+
+  await pool.query(
+    `UPDATE users SET is_email_verified = TRUE WHERE id = $1`,
+    [user_id],
+  );
+
+  await pool.query(`DELETE FROM email_otps WHERE id = $1`, [otpRecord.id]);
+
+  return { message: "Email verified successfully" };
+};
