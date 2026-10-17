@@ -13,12 +13,10 @@ export const createProfileController = async (
   try {
     const {
       user_id,
-      user_name,
-      user_email,
-      users_skills,
-      user_current_company,
-      total_experience_years,
-      total_experience_months,
+      skills,
+      current_company,
+      experience_years,
+      experience_months,
       linkedin_url,
       github_url,
     } = req.body;
@@ -30,12 +28,10 @@ export const createProfileController = async (
     }
 
     const profile = await createProfileService(user_id, {
-      user_name,
-      user_email,
-      users_skills,
-      user_current_company,
-      total_experience_years,
-      total_experience_months,
+      skills,
+      current_company,
+      experience_years,
+      experience_months,
       linkedin_url,
       github_url,
     });
@@ -103,24 +99,20 @@ export const updateProfileController = async (
     // }
 
     const {
-      user_name,
-      user_email,
-      users_skills,
-      user_current_company,
-      total_experience_years,
-      total_experience_months,
+      skills,
+      current_company,
+      experience_years,
+      experience_months,
       linkedin_url,
       github_url,
       user_id
     } = req.body;
 
     const updatedProfile = await updateProfileService(user_id, {
-      user_name,
-      user_email,
-      users_skills,
-      user_current_company,
-      total_experience_years,
-      total_experience_months,
+      skills,
+      current_company,
+      experience_years,
+      experience_months,
       linkedin_url,
       github_url,
     });

@@ -7,7 +7,7 @@ import {
 
 const profileRouter = express.Router();
 
-profileRouter.post("/", createProfileController);
+profileRouter.post("/create-profile", createProfileController);
 profileRouter.get("/:user_id", fetchProfileController);
 profileRouter.patch("/", updateProfileController);
 

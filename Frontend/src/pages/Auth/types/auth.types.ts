@@ -4,10 +4,15 @@ export type SignupPayload = {
   password: string;
 };
 
-export type SignupApiResponse = {
+type userSignUpData = {
   id: string;
   user_name: string;
   email: string;
+}
+
+export type SignupApiResponse = {
+  message: string;
+  userSignUpData: userSignUpData
 };
 
 export type SignupFormValues = {

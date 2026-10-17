@@ -1,12 +1,11 @@
 import pool from "../config/db.js";
 
 type ProfileInput = {
-  user_name?: string | null;
-  user_email?: string | null;
-  users_skills?: string[] | null;
-  user_current_company?: string | null;
-  total_experience_years?: number | null;
-  total_experience_months?: number | null;
+
+  skills?: string[] | null;
+  current_company?: string | null;
+  experience_years?: number | null;
+  experience_months?: number | null;
   linkedin_url?: string | null;
   github_url?: string | null;
 };
@@ -17,12 +16,11 @@ export const createProfileService = async (
   profile: ProfileInput = {},
 ) => {
   const {
-    user_name = null,
-    user_email = null,
-    users_skills = [],
-    user_current_company = null,
-    total_experience_years = null,
-    total_experience_months = null,
+  
+    skills = [],
+    current_company = null,
+    experience_years = null,
+    experience_months = null,
     linkedin_url = null,
     github_url = null,
   } = profile;
@@ -31,26 +29,23 @@ export const createProfileService = async (
     `
       INSERT INTO profile (
         user_id,
-        user_name,
-        user_email,
-        users_skills,
-        user_current_company,
-        total_experience_years,
-        total_experience_months,
+        skills,
+        current_company,
+        experience_years,
+        experience_months,
         linkedin_url,
         github_url
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `,
     [
       user_id,
-      user_name,
-      user_email,
-      users_skills,
-      user_current_company,
-      total_experience_years,
-      total_experience_months,
+   
+      skills,
+      current_company,
+      experience_years,
+      experience_months,
       linkedin_url,
       github_url,
     ],
@@ -79,12 +74,11 @@ export const updateProfileService = async (
   profile: ProfileInput,
 ) => {
   const editableColumns = [
-    "user_name",
-    "user_email",
-    "users_skills",
-    "user_current_company",
-    "total_experience_years",
-    "total_experience_months",
+    
+    "skills",
+    "current_company",
+    "experience_years",
+    "experience_months",
     "linkedin_url",
     "github_url",
   ] as const;

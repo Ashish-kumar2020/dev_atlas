@@ -66,6 +66,9 @@ const Signup = () => {
       const response = await signupApi(signupPayload);
       // Addd router
       console.log(response);
+      localStorage.setItem("user_id", response.userSignUpData.id)
+      localStorage.setItem("user_name", response.userSignUpData.user_name);
+      localStorage.setItem("email", response.userSignUpData.email);
       toast.success(AUTH_MESSAGES.SIGNUP_SUCCESS);
       navigate(ROUTE.LOGIN);
     } catch (error: unknown) {

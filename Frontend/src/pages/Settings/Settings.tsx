@@ -1,25 +1,100 @@
-import {
-  Lock,
-  LogOut,
-  Trash2,
-} from "lucide-react";
+import { Lock, LogOut, Trash2 } from "lucide-react";
 
 import { Badge } from "../../../@/components/ui/badge";
 import { Button } from "../../../@/components/ui/button";
 import { Input } from "../../../@/components/ui/input";
 import { Label } from "../../../@/components/ui/label";
+import { useState } from "react";
+import type { UserProfileData } from "./profile.types";
+import { profileSchema } from "./profile.schema";
+import { profileAPI } from "./profile.api";
+import { toast } from "sonner";
+import { GENERIC_MESSAGE } from "@/constants/generic.constant";
+import { handleApiError } from "@/api/handleApiError";
 
-
-const skills = [
-  "React",
-  "TypeScript",
-  "JavaScript",
-  "Tailwind CSS",
-  "Redux",
-  "Node.js",
-];
+const user_name =
+  localStorage.getItem("user_name") || "Enter your username....";
+const user_email = localStorage.getItem("email") || "";
+const user_id = localStorage.getItem("user_id") || "";
 
 const Settings = () => {
+  const [skillsInput, setSkillsInput] = useState("");
+  const [userProfileData, setUserProfileData] = useState<UserProfileData>({
+    user_id: "",
+    user_name: "",
+    user_email: "",
+    users_skills: [],
+    user_current_company: "",
+    total_experience_months: "",
+    total_experience_years: "",
+    linkedin_url: "",
+    github_url: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof LoginFormValues, string>>
+  >({});
+  const [isLoading,setIsLoading] = useState(false);
+
+  const updateProfileData = <k extends keyof UserProfileData>(
+    fieldName: k,
+    value: UserProfileData[k],
+  ) => {
+    setUserProfileData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+  };
+
+  const handleProfileData = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const userData = {
+        ...userProfileData,
+        user_id,
+        user_name,
+        user_email,
+      };
+      const result = profileSchema.safeParse(userData);
+      if (!result.success) {
+        const fieldErrors = result.error.flatten().fieldErrors;
+        setErrors({
+          user_id: fieldErrors.user_id?.[0],
+          user_name: fieldErrors.user_name?.[0],
+          user_email: fieldErrors.user_email?.[0],
+          users_skills: fieldErrors.users_skills?.[0],
+          user_current_company: fieldErrors.user_current_company?.[0],
+          total_experience_months: fieldErrors.total_experience_months?.[0],
+          total_experience_years: fieldErrors.total_experience_years?.[0],
+          linkedin_url: fieldErrors.linkedin_url?.[0],
+          github_url: fieldErrors.github_url?.[0]
+        });
+        return;
+      }
+      setErrors({});
+      setIsLoading(true);
+
+      const profilePayload = {
+        user_id: result.data.user_id,
+        user_name: result.data.user_name,
+        user_email: result.data.user_email,
+        users_skills: result.data.users_skills,
+        user_current_company: result.data.user_current_company,
+        total_experience_months: result.data.total_experience_months,
+        total_experience_years: result.data.total_experience_years,
+        linkedin_url: result.data.linkedin_url,
+        github_url: result.data.github_url
+      }
+      const response = await profileAPI(profilePayload);
+      console.log(response);
+      toast.success(GENERIC_MESSAGE.PROFILE_UPDATE_SUCCESS);
+    } catch (error) {
+      console.log(error);
+      toast.error(handleApiError(error, GENERIC_MESSAGE.PROFILE_ERROR_MESSAGE))
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl space-y-12">
       {/* Header */}
@@ -36,9 +111,7 @@ const Settings = () => {
       {/* Profile */}
       <section>
         <div className="mb-5">
-          <h2 className="text-sm font-medium text-slate-200">
-            Profile
-          </h2>
+          <h2 className="text-sm font-medium text-slate-200">Profile</h2>
 
           <p className="mt-1 text-[12px] text-slate-600">
             Your basic account information.
@@ -48,12 +121,12 @@ const Settings = () => {
         <div className="space-y-5 border-y border-white/6 py-6">
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-[12px] text-slate-500">
-                Name
-              </Label>
+              <Label className="text-[12px] text-slate-500">Name</Label>
 
               <Input
-                defaultValue="Ashish Kumar Singh"
+                placeholder="Enter"
+                value={userProfileData.user_name || user_name}
+                onChange={(e) => updateProfileData("user_name", e.target.value)}
                 className="
                   h-9
                   border-white/8
@@ -68,13 +141,12 @@ const Settings = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[12px] text-slate-500">
-                Email
-              </Label>
+              <Label className="text-[12px] text-slate-500">Email</Label>
 
               <Input
                 type="email"
-                defaultValue="ashish@example.com"
+                defaultValue={user_email}
+                disabled={true}
                 className="
                   h-9
                   border-white/8
@@ -111,7 +183,11 @@ const Settings = () => {
             </Label>
 
             <Input
-              placeholder="e.g. Arrise Solutions"
+              placeholder="e.g. Google,Amazon..."
+              value={userProfileData.user_current_company}
+              onChange={(e) =>
+                updateProfileData("user_current_company", e.target.value)
+              }
               className="
                 h-9
                 border-white/8
@@ -127,15 +203,20 @@ const Settings = () => {
 
           {/* Experience */}
           <div>
-            <Label className="text-[12px] text-slate-500">
-              Experience
-            </Label>
+            <Label className="text-[12px] text-slate-500">Experience</Label>
 
             <div className="mt-2 flex max-w-xl gap-3">
               <div className="flex flex-1 items-center gap-2">
                 <Input
                   type="number"
                   min="0"
+                  value={userProfileData.total_experience_years}
+                  onChange={(e) =>
+                    updateProfileData(
+                      "total_experience_years",
+                      Math.max(0, Number(e.target.value)),
+                    )
+                  }
                   placeholder="0"
                   className="
                     h-9
@@ -159,6 +240,18 @@ const Settings = () => {
                   type="number"
                   min="0"
                   max="11"
+                  value={userProfileData.total_experience_months}
+                  onChange={(e) => {
+                    const inputvalue = e.target.value;
+                    if (inputvalue === "") {
+                      updateProfileData("total_experience_months", inputvalue);
+                      return;
+                    }
+                    const value = Number(e.target.value);
+                    if (value >= 0 && value <= 11) {
+                      updateProfileData("total_experience_months", value);
+                    }
+                  }}
                   placeholder="0"
                   className="
                     h-9
@@ -181,12 +274,22 @@ const Settings = () => {
 
           {/* Skills */}
           <div className="space-y-2">
-            <Label className="text-[12px] text-slate-500">
-              Skills
-            </Label>
+            <Label className="text-[12px] text-slate-500">Skills</Label>
 
             <Input
-              placeholder="Add a skill..."
+              placeholder="React, TypeScript, JS"
+              value={skillsInput}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSkillsInput(value);
+                updateProfileData(
+                  "users_skills",
+                  skillsInput
+                    .split(",")
+                    .map((skill) => skill.trim())
+                    .filter(Boolean),
+                );
+              }}
               className="
                 h-9
                 max-w-xl
@@ -201,7 +304,7 @@ const Settings = () => {
             />
 
             <div className="flex max-w-xl flex-wrap gap-2 pt-1">
-              {skills.map((skill) => (
+              {userProfileData.users_skills.map((skill) => (
                 <Badge
                   key={skill}
                   variant="outline"
@@ -240,13 +343,16 @@ const Settings = () => {
           {/* LinkedIn */}
           <div className="max-w-xl space-y-2">
             <Label className="flex items-center gap-2 text-[12px] text-slate-500">
-            
               LinkedIn
             </Label>
 
             <Input
               type="url"
               placeholder="https://linkedin.com/in/username"
+              value={userProfileData.linkedin_url}
+              onChange={(e) =>
+                updateProfileData("linkedin_url", e.target.value)
+              }
               className="
                 h-9
                 border-white/8
@@ -263,13 +369,14 @@ const Settings = () => {
           {/* GitHub */}
           <div className="max-w-xl space-y-2">
             <Label className="flex items-center gap-2 text-[12px] text-slate-500">
-             
               GitHub
             </Label>
 
             <Input
               type="url"
               placeholder="https://github.com/username"
+              value={userProfileData.github_url}
+              onChange={(e) => updateProfileData("github_url", e.target.value)}
               className="
                 h-9
                 border-white/8
@@ -288,6 +395,7 @@ const Settings = () => {
       {/* Save */}
       <div className="flex justify-end border-b border-white/6 pb-8">
         <Button
+          onClick={handleProfileData}
           className="
             h-8
             rounded-md
@@ -306,9 +414,7 @@ const Settings = () => {
       {/* Account */}
       <section>
         <div className="mb-5">
-          <h2 className="text-sm font-medium text-slate-200">
-            Account
-          </h2>
+          <h2 className="text-sm font-medium text-slate-200">Account</h2>
 
           <p className="mt-1 text-[12px] text-slate-600">
             Manage your account security and session.
@@ -321,9 +427,7 @@ const Settings = () => {
               <Lock className="mt-0.5 size-4 text-slate-600" />
 
               <div>
-                <p className="text-[13px] text-slate-300">
-                  Change password
-                </p>
+                <p className="text-[13px] text-slate-300">Change password</p>
 
                 <p className="mt-1 text-[11.5px] text-slate-600">
                   Update your account password.
@@ -355,9 +459,7 @@ const Settings = () => {
               <LogOut className="mt-0.5 size-4 text-slate-600" />
 
               <div>
-                <p className="text-[13px] text-slate-300">
-                  Sign out
-                </p>
+                <p className="text-[13px] text-slate-300">Sign out</p>
 
                 <p className="mt-1 text-[11.5px] text-slate-600">
                   Sign out from this device.
@@ -389,9 +491,7 @@ const Settings = () => {
       {/* Danger Zone */}
       <section className="pb-8">
         <div className="mb-5">
-          <h2 className="text-sm font-medium text-red-400/80">
-            Danger zone
-          </h2>
+          <h2 className="text-sm font-medium text-red-400/80">Danger zone</h2>
 
           <p className="mt-1 text-[12px] text-slate-600">
             These actions cannot be easily undone.
@@ -403,9 +503,7 @@ const Settings = () => {
             <Trash2 className="mt-0.5 size-4 text-red-400/60" />
 
             <div>
-              <p className="text-[13px] text-slate-300">
-                Delete account
-              </p>
+              <p className="text-[13px] text-slate-300">Delete account</p>
 
               <p className="mt-1 text-[11.5px] text-slate-600">
                 Permanently delete your account and all associated data.

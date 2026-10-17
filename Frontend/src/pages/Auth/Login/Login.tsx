@@ -18,33 +18,33 @@ import { ROUTE } from "@/constants/routes.constant";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loginDetails , setLoginDetails] = useState<LoginPayload>({
+  const [loginDetails, setLoginDetails] = useState<LoginPayload>({
     email: "",
-    password: ""
+    password: "",
   });
-   const [errors, setErrors] = useState<
-      Partial<Record<keyof LoginFormValues, string>>
-    >({});
-    const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof LoginFormValues, string>>
+  >({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const userLoginDetails = (fieldName: keyof LoginPayload,value: string) => {
+  const userLoginDetails = (fieldName: keyof LoginPayload, value: string) => {
     setLoginDetails((prev) => ({
       ...prev,
-      [fieldName]:  value
-    }))
-  }
+      [fieldName]: value,
+    }));
+  };
 
-  const handleLoginDetails = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleLoginDetails = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = loginSchema.safeParse(loginDetails);
-      if(!result.success){
+      if (!result.success) {
         const fieldErrors = result.error.flatten().fieldErrors;
         setErrors({
           email: fieldErrors.email?.[0],
-          password : fieldErrors.password?.[0]
+          password: fieldErrors.password?.[0],
         });
         return;
       }
@@ -52,19 +52,19 @@ const Login = () => {
       setIsLoading(true);
       const loginPayload = {
         email: result.data.email,
-        password: result.data.password
-      }
+        password: result.data.password,
+      };
       const response = await loginApi(loginPayload);
       console.log(response);
       toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
       navigate(ROUTE.HOME);
     } catch (error) {
-      console.log(error)
-      toast.error(handleApiError(error,AUTH_MESSAGES.LOGIN_FAILED));
-    }finally{
+      console.log(error);
+      toast.error(handleApiError(error, AUTH_MESSAGES.LOGIN_FAILED));
+    } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#070B12] text-[#FAFAFA]">
@@ -162,7 +162,9 @@ const Login = () => {
                     type="email"
                     placeholder="john@example.com"
                     value={loginDetails.email}
-                    onChange={(e) => userLoginDetails(GENERIC_MESSAGE.EMAIL,e.target.value)}
+                    onChange={(e) =>
+                      userLoginDetails(GENERIC_MESSAGE.EMAIL, e.target.value)
+                    }
                     className="
                       h-10
                       w-full
@@ -216,8 +218,10 @@ const Login = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    value={loginDetails.password} 
-                   onChange={(e) => userLoginDetails(GENERIC_MESSAGE.PASSWORD,e.target.value)}
+                    value={loginDetails.password}
+                    onChange={(e) =>
+                      userLoginDetails(GENERIC_MESSAGE.PASSWORD, e.target.value)
+                    }
                     className="
                       h-10
                       w-full
