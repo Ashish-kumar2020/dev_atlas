@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { GENERIC_MESSAGE } from "@/constants/generic.constant";
 import { handleApiError } from "@/api/handleApiError";
 
+
 const user_name =
   localStorage.getItem("user_name") || "Enter your username....";
 const user_email = localStorage.getItem("email") || "";
@@ -31,9 +32,9 @@ const Settings = () => {
     github_url: "",
   });
   const [errors, setErrors] = useState<
-    Partial<Record<keyof LoginFormValues, string>>
+    Partial<Record<keyof UserProfileData, string>>
   >({});
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateProfileData = <k extends keyof UserProfileData>(
     fieldName: k,
@@ -45,7 +46,9 @@ const Settings = () => {
     }));
   };
 
-  const handleProfileData = async(e: React.MouseEvent<HTMLButtonElement>) => {
+
+  console.log(errors);
+  const handleProfileData = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const userData = {
@@ -66,7 +69,7 @@ const Settings = () => {
           total_experience_months: fieldErrors.total_experience_months?.[0],
           total_experience_years: fieldErrors.total_experience_years?.[0],
           linkedin_url: fieldErrors.linkedin_url?.[0],
-          github_url: fieldErrors.github_url?.[0]
+          github_url: fieldErrors.github_url?.[0],
         });
         return;
       }
@@ -82,15 +85,15 @@ const Settings = () => {
         total_experience_months: result.data.total_experience_months,
         total_experience_years: result.data.total_experience_years,
         linkedin_url: result.data.linkedin_url,
-        github_url: result.data.github_url
-      }
+        github_url: result.data.github_url,
+      };
       const response = await profileAPI(profilePayload);
       console.log(response);
       toast.success(GENERIC_MESSAGE.PROFILE_UPDATE_SUCCESS);
     } catch (error) {
       console.log(error);
-      toast.error(handleApiError(error, GENERIC_MESSAGE.PROFILE_ERROR_MESSAGE))
-    }finally{
+      toast.error(handleApiError(error, GENERIC_MESSAGE.PROFILE_ERROR_MESSAGE));
+    } finally {
       setIsLoading(false);
     }
   };
@@ -110,12 +113,30 @@ const Settings = () => {
 
       {/* Profile */}
       <section>
-        <div className="mb-5">
-          <h2 className="text-sm font-medium text-slate-200">Profile</h2>
+        <div className="mb-5 flex justify-between">
+          <div>
+            <h2 className="text-sm font-medium text-slate-200">Profile</h2>
 
-          <p className="mt-1 text-[12px] text-slate-600">
-            Your basic account information.
-          </p>
+            <p className="mt-1 text-[12px] text-slate-600">
+              Your basic account information.
+            </p>
+
+          </div>
+          <div className="flex justify-end">
+            <Button
+              className="
+                  h-8
+                  rounded-md
+                  bg-blue-500
+                  px-4
+                  text-xs
+                  font-medium
+                  text-white
+                  hover:bg-blue-600"
+            >
+              {isLoading ? "Updating Profile..." : "Edit Profile"}
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-5 border-y border-white/6 py-6">
@@ -407,7 +428,7 @@ const Settings = () => {
             hover:bg-blue-600
           "
         >
-          Save changes
+          {isLoading ? "Saving Changes..." : "Save Changes"}
         </Button>
       </div>
 

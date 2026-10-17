@@ -76,17 +76,12 @@ const DashBoard = () => {
 
               <div className="mt-5 flex w-full max-w-xs items-center gap-4">
                 <Button
-                  asChild
                   size="sm"
+                  render={<Link to="/subjects" />}
                   className="h-8 rounded-lg bg-blue-500 px-3 text-[11px] font-medium text-white hover:bg-blue-600"
                 >
-                  <Link
-                    to="/subjects"
-                    className="flex items-center gap-1 whitespace-nowrap"
-                  >
-                    <span>Continue</span>
-                    <ArrowRight className="size-3.5 shrink-0" />
-                  </Link>
+                  <span>Continue</span>
+                  <ArrowRight className="size-3.5 shrink-0" />
                 </Button>
 
                 <div className="min-w-20 flex-1">
