@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import {
   forgotPasswordService,
   updatePasswordService,
@@ -7,6 +8,7 @@ import {
   verifyUserDetailsService,
 } from "../services/auth.services.js";
 
+const SALT_ROUND = 10;
 // -------------- LOGIN CONTROLLER ---------------------------------
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -17,7 +19,11 @@ export const loginController = async (req: Request, res: Response) => {
       });
     }
 
-    const userLoginData = await userLoginDataService(email, password);
+    const userLoginData = await userLoginDataService(
+      email.trim().toLowerCase(),
+      password,
+    );
+
     if (!userLoginData) {
       return res.status(401).json({
         message: "Invalid email or password",
@@ -49,11 +55,12 @@ export const signupController = async (req: Request, res: Response) => {
         message: "All Fields are required",
       });
     }
-
+    const normalizedEmail = email.trim().toLowerCase();
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
     const userSignUpData = await userSignUpDataService(
       user_name,
-      email,
-      password,
+      normalizedEmail,
+      hashedPassword,
     );
 
     return res.status(201).json({

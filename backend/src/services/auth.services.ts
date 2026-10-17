@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 import { sendOTPService } from "./otp.service.js";
-
+import bcrypt from "bcrypt";
 // LOGIN Service
 export const userLoginDataService = async (email: string, password: string) => {
   const result = await pool.query(
@@ -24,8 +24,9 @@ export const userLoginDataService = async (email: string, password: string) => {
       },
     );
   }
+  const isPasswordValid = await bcrypt.compare(password,user.password);
 
-  if (user.password !== password) {
+  if (!isPasswordValid) {
     throw Object.assign(new Error("Invalid email or password"), {
       statusCode: 401,
     });
@@ -33,7 +34,7 @@ export const userLoginDataService = async (email: string, password: string) => {
   return {
     id: user.id,
     user_name: user.user_name,
-    email: user.email,
+    email: user.email
   };
 };
 
