@@ -5,11 +5,12 @@ import {
   fetchAllFavouriteController,
   deleteFavouriteController,
 } from "../controllers/favourite.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const favouriteRouter = express.Router();
 
-favouriteRouter.post("/", createFavouriteController);
-favouriteRouter.get("/:user_id", fetchAllFavouriteController);
-favouriteRouter.delete("/:favourite_id", deleteFavouriteController);
+favouriteRouter.post("/", authMiddleware, createFavouriteController);
+favouriteRouter.get("/:user_id", authMiddleware, fetchAllFavouriteController);
+favouriteRouter.delete("/:favourite_id", authMiddleware, deleteFavouriteController);
 
 export default favouriteRouter;

@@ -4,11 +4,12 @@ import {
   fetchRevisionController,
   deleteRevisionController,
 } from "../controllers/revision.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const revisionRouter = express.Router();
 
-revisionRouter.post("/", createRevisionController);
-revisionRouter.get("/:user_id", fetchRevisionController);
-revisionRouter.delete("/:revision_id", deleteRevisionController);
+revisionRouter.post("/", authMiddleware, createRevisionController);
+revisionRouter.get("/:user_id", authMiddleware, fetchRevisionController);
+revisionRouter.delete("/:revision_id", authMiddleware, deleteRevisionController);
 
 export default revisionRouter;

@@ -1,12 +1,13 @@
 import express from "express";
 import { createTaskController, deleteTaskController, fetchAllTaskController, updateTaskController } from "../controllers/task_managemnet.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const taskRouter = express.Router();
 
-taskRouter.post("/", createTaskController);
-taskRouter.get("/:user_id", fetchAllTaskController);
-taskRouter.patch("/:task_id", updateTaskController);
-taskRouter.delete("/:task_id", deleteTaskController);
+taskRouter.post("/", authMiddleware,createTaskController);
+taskRouter.get("/:user_id", authMiddleware,fetchAllTaskController);
+taskRouter.patch("/:task_id", authMiddleware,updateTaskController);
+taskRouter.delete("/:task_id", authMiddleware,deleteTaskController);
 
 export default taskRouter;
 

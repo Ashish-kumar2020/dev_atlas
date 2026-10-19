@@ -147,3 +147,6 @@ export const verifyAccountController = (req: Request, res: Response) => {
     verifyUserDetails,
   });
 };
+
+
+

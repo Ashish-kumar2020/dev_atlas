@@ -4,11 +4,12 @@ import {
   fetchProfileController,
   updateProfileController,
 } from "../controllers/profile.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const profileRouter = express.Router();
 
-profileRouter.post("/create-profile", createProfileController);
-profileRouter.get("/:user_id", fetchProfileController);
-profileRouter.patch("/", updateProfileController);
+profileRouter.post("/create-profile", authMiddleware,createProfileController);
+profileRouter.get("/:user_id", authMiddleware,fetchProfileController);
+profileRouter.patch("/", authMiddleware,updateProfileController);
 
 export default profileRouter;
