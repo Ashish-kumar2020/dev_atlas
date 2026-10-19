@@ -7,6 +7,8 @@ import {
   userSignUpDataService,
   verifyUserDetailsService,
 } from "../services/auth.services.js";
+import { generateJWTToken } from "../utils/generateToken.js";
+
 
 const SALT_ROUND = 10;
 // -------------- LOGIN CONTROLLER ---------------------------------
@@ -24,13 +26,11 @@ export const loginController = async (req: Request, res: Response) => {
       password,
     );
 
-    if (!userLoginData) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+    const token = generateJWTToken(userLoginData.id);
     return res.status(200).json({
       message: "User Loggedin Successfully",
+      token,
+      user: userLoginData
     });
   } catch (error) {
     console.error(error);
