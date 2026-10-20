@@ -6,7 +6,9 @@ import { createBookmarkService, deleteBookmarkService, fetchUserBookmarkService,
 // --------------------------- CREATE BOOKMARK CONTROLLER ----------------------
 export const createBookmarkController = async(req:Request, res:Response) =>{
     try {
-        const {user_id, title, bookmark_link, category_id} = req.body;
+
+        const { title, bookmark_link, category_id} = req.body;
+        const user_id = req.userId;
         if(!user_id || !title || !bookmark_link){
             return res.status(400).json({
                 message: "All Fields are Required"
@@ -35,7 +37,8 @@ export const createBookmarkController = async(req:Request, res:Response) =>{
 export const fetchUserBookmarkController = async (req:Request, res: Response) => {
 
     try {
-         const {user_id} = req.params;
+        //  const {user_id} = req.params;
+         const user_id = req.userId;
         if(typeof user_id !== "string"){
             return res.status(400).json({
                 message: "User id is required"

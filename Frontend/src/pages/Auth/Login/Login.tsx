@@ -56,6 +56,8 @@ const Login = () => {
       };
       const response = await loginApi(loginPayload);
       console.log(response);
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user_object", JSON.stringify(response.user));
       toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
       navigate(ROUTE.HOME);
     } catch (error) {

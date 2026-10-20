@@ -29,6 +29,14 @@ export type LoginPayload = {
   password: string;
 }
 
+export type USER = {
+  email: string,
+  id: string,
+  user_name: string
+}
+
 export type LoginApiResponse = {
   message: string;
+  token: string,
+  user:USER
 };

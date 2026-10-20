@@ -9,6 +9,9 @@ export const GENERIC_MESSAGE = {
 
     // ------------------------------------ PROFILE
     PROFILE_UPDATE_SUCCESS : "profile updated successfully",
-    PROFILE_ERROR_MESSAGE : "Error while updating profile"
+    PROFILE_ERROR_MESSAGE : "Error while updating profile",
     
+    // ------------------------------------- BOOKMARK
+    BOOKMARK_ADDED_SUCCESS : "Bookmark added successfully",
+    BOOKMARK_ADDED_FAILED : "Error while Adding bookmark"
 } as const;
