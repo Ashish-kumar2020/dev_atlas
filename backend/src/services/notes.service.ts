@@ -40,9 +40,22 @@ export const deleteNoteService = async (note_id: string) => {
 };
 
 // ----------------------- FETCH ALL NOTES -----------------------------------------
-export const fetchAllNotesService = async () => {
-  const result =
-    await pool.query(`SELECT notes.id AS note_id,notes.title AS note_title,notes.description AS note_description,topics.id AS topic_id,topics.topic_name AS topic_name, subjects.id AS subject_id,subjects.subject_name AS subject_name FROM notes INNER JOIN topics ON notes.topic_id = topics.id INNER JOIN subjects
-ON topics.subject_id = subjects.id; `);
+export const fetchAllNotesService = async (userId: string) => {
+  const result = await pool.query(
+    `SELECT
+       notes.id AS note_id,
+       notes.title AS note_title,
+       notes.description AS note_description,
+       topics.id AS topic_id,
+       topics.topic_name AS topic_name,
+       subjects.id AS subject_id,
+       subjects.subject_name AS subject_name
+     FROM notes
+     INNER JOIN topics ON notes.topic_id = topics.id
+     INNER JOIN subjects ON topics.subject_id = subjects.id
+     WHERE subjects.user_id = $1`,
+    [userId],
+  );
+
   return result.rows;
 };

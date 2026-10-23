@@ -3,13 +3,13 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Plus,
   Trash2,
 } from "lucide-react";
 
 import { Badge } from "../../../@/components/ui/badge";
 import { Button } from "../../../@/components/ui/button";
-import { Input } from "../../../@/components/ui/input";
+import { AddTask } from "./AddTask";
+
 
 type TaskStatus = "Todo" | "In Progress" | "Completed";
 
@@ -76,8 +76,6 @@ const initialTasks: Task[] = [
 
 const Tasks = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [adding, setAdding] = useState(false);
-  const [title, setTitle] = useState("");
 
   const openTasks = tasks.filter(
     (task) => task.status !== "Completed",
@@ -91,23 +89,7 @@ const Tasks = () => {
     ? Math.round((completedTasks / tasks.length) * 100)
     : 0;
 
-  const addTask = () => {
-    const trimmedTitle = title.trim();
 
-    if (!trimmedTitle) return;
-
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title: trimmedTitle,
-      status: "Todo",
-      priority: "Medium",
-      tag: "General",
-    };
-
-    setTasks((current) => [...current, newTask]);
-    setTitle("");
-    setAdding(false);
-  };
 
   const moveTask = (id: string, status: TaskStatus) => {
     setTasks((current) =>
@@ -149,71 +131,10 @@ const Tasks = () => {
           </p>
         </div>
 
-        <Button
-          onClick={() => setAdding((value) => !value)}
-          className="
-            h-8
-            rounded-md
-            bg-blue-500
-            px-3
-            text-xs
-            font-medium
-            text-white
-            hover:bg-blue-600
-          "
-        >
-          <Plus className="mr-1.5 size-3.5" />
-          New task
-        </Button>
+      <AddTask/>
+        
       </div>
 
-      {/* Add Task */}
-      {adding && (
-        <div className="flex max-w-xl items-center gap-2 border-b border-white/8 pb-5">
-          <Input
-            autoFocus
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                addTask();
-              }
-            }}
-            placeholder="What needs doing?"
-            className="
-              h-9
-              border-0
-              border-b
-              border-white/10
-              rounded-none
-              bg-transparent
-              px-0
-              text-sm
-              text-slate-300
-              shadow-none
-              placeholder:text-slate-600
-              focus-visible:border-blue-500/60
-              focus-visible:ring-0
-            "
-          />
-
-          <Button
-            onClick={addTask}
-            variant="ghost"
-            className="
-              h-8
-              shrink-0
-              px-3
-              text-xs
-              text-slate-400
-              hover:bg-white/5
-              hover:text-slate-200
-            "
-          >
-            Add
-          </Button>
-        </div>
-      )}
 
       {/* Summary */}
       <div className="flex flex-wrap items-center gap-x-10 gap-y-4 border-y border-white/6 py-4">
@@ -306,7 +227,7 @@ const Tasks = () => {
                         py-4
                         pl-3
                         transition-colors
-                        hover:bg-white/[0.015]
+                        hover:bg-white/1.5
                       "
                     >
                       {/* Priority indicator */}
@@ -314,7 +235,7 @@ const Tasks = () => {
                         className={`
                           absolute
                           left-0
-                          top-[18px]
+                          top-4.5
                           h-3
                           w-0.5
                           rounded-full
@@ -354,7 +275,7 @@ const Tasks = () => {
                             h-5
                             rounded
                             border-0
-                            bg-white/[0.04]
+                            bg-white/4
                             px-1.5
                             text-[10px]
                             font-normal

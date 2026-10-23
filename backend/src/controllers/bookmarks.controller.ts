@@ -106,7 +106,7 @@ export const deleteBookmarkController = async (req:Request, res: Response) => {
                 message: "Bookmark Id is required"
             })
         }
-        const {user_id} = req.body;
+        const user_id = req.userId;
         if(!user_id ){
             return res.status(400).json({
                 message: "User id is required"

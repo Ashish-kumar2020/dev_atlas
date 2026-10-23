@@ -64,53 +64,60 @@ export const updateNoteController = async (req: Request, res: Response) => {
 };
 
 // ---------------------- DELETE NOTE ------------------------------------
-export const deleteNoteController = async(req: Request, res:Response) => {
+export const deleteNoteController = async (req: Request, res: Response) => {
   try {
-    const {note_id}  = req.params;
-    if(typeof note_id !== "string"){
+    const { note_id } = req.params;
+    if (typeof note_id !== "string") {
       return res.status(400).json({
-        message: "note_id is required"
+        message: "note_id is required",
       });
     }
     const deletedNote = await deleteNoteService(note_id);
 
-    if(!deletedNote){
+    if (!deletedNote) {
       return res.status(404).json({
-        message: "Note not found"
+        message: "Note not found",
       });
     }
 
     return res.status(200).json({
-      message: "Note Deleted Successfully"
-    })
+      message: "Note Deleted Successfully",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 // ---------------------- FETCH ALL NOTES --------------------------------
-export const fetchAllNotesController = async(req: Request, res: Response) => {
+export const fetchAllNotesController = async (req: Request, res: Response) => {
   try {
-    
-    const allNotesData = await fetchAllNotesService();
+    const userId = req.userId;
 
-    if(allNotesData.length === 0){
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const allNotesData = await fetchAllNotesService(userId);
+
+    if (allNotesData.length === 0) {
       return res.status(200).json({
-        message: "No Notes found"
+        message: "No Notes found",
       });
     }
 
     return res.status(200).json({
       message: "Notes Fetched Successfully",
-      allNotesData
-    })
+      allNotesData,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
