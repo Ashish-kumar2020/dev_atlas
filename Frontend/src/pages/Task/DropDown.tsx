@@ -8,9 +8,24 @@ import {
 } from "../../../@/components/ui/select";
 import type { DROPDOWN_PROP_TYPE, ITEMS_PROPS } from "./task.types";
 
-export const DropDown = ({ items, placeHolder }: DROPDOWN_PROP_TYPE) => {
+export const DropDown = ({
+  items,
+  placeHolder,
+  value,
+  fieldName,
+  onChange,
+  error,
+}: DROPDOWN_PROP_TYPE) => {
   return (
-    <Select items={items}>
+    <Select
+      items={items}
+      value={value}
+      onValueChange={(newValue) => {
+        if (newValue) {
+          onChange(fieldName, newValue);
+        }
+      }}
+    >
       <SelectTrigger className="w-45 border-zinc-800 bg-zinc-900 text-zinc-100 hover:bg-zinc-800 focus:ring-blue-500">
         <SelectValue placeholder={placeHolder} />
       </SelectTrigger>
@@ -27,6 +42,7 @@ export const DropDown = ({ items, placeHolder }: DROPDOWN_PROP_TYPE) => {
             </SelectItem>
           ))}
         </SelectGroup>
+        {error && <p className="text-xs text-red-400">{error}</p>}
       </SelectContent>
     </Select>
   );

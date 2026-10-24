@@ -5,7 +5,7 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 const taskRouter = express.Router();
 
 taskRouter.post("/", authMiddleware,createTaskController);
-taskRouter.get("/:user_id", authMiddleware,fetchAllTaskController);
+taskRouter.get("/", authMiddleware,fetchAllTaskController);
 taskRouter.patch("/:task_id", authMiddleware,updateTaskController);
 taskRouter.delete("/:task_id", authMiddleware,deleteTaskController);
 

@@ -23,5 +23,23 @@ export type ITEMS_PROPS = {
 export type DROPDOWN_PROP_TYPE = {
   items: ITEMS_PROPS[];
   placeHolder: string;
+  value: string;
+  fieldName: "status" | "priority";
+  onChange: (key: "status" | "priority", value: string) => void;
+  error?: string
 };
 
+export type DATE_PROP_TYPE = {
+  value: string;
+  fieldName: "due_date";
+  onChange: (key: "due_date", value: string) => void;
+  error?: string;
+};
+
+export type TASK_POST_PAYLOAD = {
+  task_title: string;
+  task_description?: string;
+  status: string;
+  priority: string;
+  due_date: string;
+};

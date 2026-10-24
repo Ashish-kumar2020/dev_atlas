@@ -9,8 +9,10 @@ import {
 // ---------------------------- CREATE TASK CONTROLLER ---------------------------------
 export const createTaskController = async (req: Request, res: Response) => {
   try {
+    const user_id = req.userId;
+    
     const {
-      user_id,
+      
       task_title,
       task_description,
       status,
@@ -128,7 +130,7 @@ export const deleteTaskController = async (req: Request, res: Response) => {
                 message: "Task id is required"
             });
         }
-        const {user_id} = req.body;
+        const user_id = req.userId;
         if(!user_id){
             return res.status(400).json({
                 message: "User id is required"
@@ -155,7 +157,7 @@ export const deleteTaskController = async (req: Request, res: Response) => {
 // ---------------------------- FETCH TASK CONTROLLER -------------------------------
 export const fetchAllTaskController = async(req: Request, res: Response) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.userId;
     if(typeof user_id !== "string"){
         return res.status(400).json({
             message: "User id is required"
