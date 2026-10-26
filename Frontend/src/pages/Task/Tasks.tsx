@@ -8,32 +8,20 @@ import {
 import { Badge } from "../../../@/components/ui/badge";
 import { Button } from "../../../@/components/ui/button";
 import { AddTask } from "./AddTask";
-import { useDeleteTask, useTask } from "./task.queries";
+import { useDeleteTask, useTask, useUpdateTask } from "./task.queries";
 import { toast } from "sonner";
 import { handleApiError } from "@/api/handleApiError";
 import { GENERIC_MESSAGE } from "@/constants/generic.constant";
+import type { ApiTask, Task, TaskStatus } from "./task.types";
+import { EditTask } from "./EditTask";
 
-type ApiTask = {
-  id: string;
-  user_id: string;
-  task_title: string;
-  task_description: string;
-  status: "backlog" | "inProgress" | "done";
-  priority: "low" | "medium" | "high";
-  due_date: string;
+const columns: TaskStatus[] = ["backlog", "inProgress", "done"];
+
+const columnLabels: Record<TaskStatus, string> = {
+  backlog: "Backlog",
+  inProgress: "In Progress",
+  done: "Done",
 };
-
-type TaskStatus = "Todo" | "In Progress" | "Completed";
-
-type Task = {
-  id: string;
-  title: string;
-  status: TaskStatus;
-  priority: "High" | "Medium" | "Low";
-  tag: string;
-};
-
-const columns: TaskStatus[] = ["Todo", "In Progress", "Completed"];
 
 const priorityStyles: Record<Task["priority"], string> = {
   High: "bg-red-400",
@@ -42,25 +30,36 @@ const priorityStyles: Record<Task["priority"], string> = {
 };
 
 const statusMap: Record<ApiTask["status"], TaskStatus> = {
-  backlog: "Todo",
-  inProgress: "In Progress",
-  done: "Completed",
+  backlog: "backlog",
+  inProgress: "inProgress",
+  done: "done",
 };
 
 const Tasks = () => {
   const { data, isPending, isError, error } = useTask();
 
-  const allTasks: ApiTask[] = data?.allTaskData ?? [];
   const deleteTask = useDeleteTask();
+  const updateTask = useUpdateTask();
+
+  const allTasks: ApiTask[] = data?.allTaskData ?? [];
 
   const tasks: Task[] = allTasks.map((task) => ({
     id: task.id,
     title: task.task_title,
+    description: task.task_description,
     status: statusMap[task.status],
-    priority:
-      (task.priority.charAt(0).toUpperCase() +
-        task.priority.slice(1)) as Task["priority"],
+    priority: (
+      task.priority.charAt(0).toUpperCase() + task.priority.slice(1)
+    ) as Task["priority"],
     tag: "Task",
+    due_date: task.due_date
+      ? new Date(task.due_date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        })
+      : "",
   }));
 
   const openTasks = allTasks.filter(
@@ -75,18 +74,49 @@ const Tasks = () => {
     ? Math.round((completedTasks / allTasks.length) * 100)
     : 0;
 
-  const getPreviousStatus = (status: TaskStatus) => {
+  const getPreviousStatus = (status: TaskStatus): TaskStatus | null => {
     const index = columns.indexOf(status);
     return index > 0 ? columns[index - 1] : null;
   };
 
-  const getNextStatus = (status: TaskStatus) => {
+  const getNextStatus = (status: TaskStatus): TaskStatus | null => {
     const index = columns.indexOf(status);
     return index < columns.length - 1 ? columns[index + 1] : null;
   };
 
+  const moveTask = (task_id: string, status: TaskStatus) => {
+    updateTask.mutate(
+      { task_id, status },
+      {
+        onSuccess: () => {
+          toast.success(GENERIC_MESSAGE.TASK_UPDATED_SUCCESS);
+        },
+        onError: (error: unknown) => {
+          toast.error(
+            handleApiError(error, GENERIC_MESSAGE.TASK_UPDATED_FAILED),
+          );
+        },
+      },
+    );
+  };
+
+  const handleTaskDelete = (id: string) => {
+    deleteTask.mutate(id, {
+      onSuccess: () => {
+        toast.success(GENERIC_MESSAGE.TASK_DELETED_SUCCESS);
+      },
+      onError: (error: unknown) => {
+        toast.error(
+          handleApiError(error, GENERIC_MESSAGE.TASK_DELETED_FAILED),
+        );
+      },
+    });
+  };
+
   if (isPending) {
-    return <p className="text-sm text-slate-400">Loading tasks...</p>;
+    return (
+      <p className="text-sm text-slate-400">Loading tasks...</p>
+    );
   }
 
   if (isError) {
@@ -97,25 +127,11 @@ const Tasks = () => {
     );
   }
 
-
-
-  const handleTaskDelete = (id: string) => {
-    console.log(id)
-    deleteTask.mutate(id, {
-      onSuccess: () => {
-        toast.success(GENERIC_MESSAGE.TASK_DELETED_SUCCESS)
-      },
-      onError: (error: unknown) => {
-        toast.error(handleApiError(error, GENERIC_MESSAGE.TASK_DELETED_FAILED))
-      }
-    })
-  }
-
   return (
-    <div className="space-y-10">
+    <div className="w-full min-w-0 space-y-8 sm:space-y-10">
       {/* Header */}
-      <div className="flex items-start justify-between gap-6">
-        <div>
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight text-slate-100">
             Tasks
           </h1>
@@ -125,11 +141,13 @@ const Tasks = () => {
           </p>
         </div>
 
-        <AddTask />
+        <div className="shrink-0">
+          <AddTask />
+        </div>
       </div>
 
       {/* Summary */}
-      <div className="flex flex-wrap items-center gap-x-10 gap-y-4 border-y border-white/6 py-4">
+      <div className="flex flex-wrap items-center gap-x-8 gap-y-4 border-y border-white/6 py-4 sm:gap-x-10">
         <div>
           <span className="text-xs text-slate-500">Open</span>
           <span className="ml-2 text-sm font-medium text-slate-200">
@@ -137,7 +155,7 @@ const Tasks = () => {
           </span>
         </div>
 
-        <div className="h-4 w-px bg-white/8" />
+        <div className="hidden h-4 w-px bg-white/8 sm:block" />
 
         <div>
           <span className="text-xs text-slate-500">Completed</span>
@@ -146,14 +164,14 @@ const Tasks = () => {
           </span>
         </div>
 
-        <div className="h-4 w-px bg-white/8" />
+        <div className="hidden h-4 w-px bg-white/8 sm:block" />
 
         <div className="flex items-center gap-3">
           <span className="text-xs text-slate-500">Progress</span>
 
           <div className="h-1 w-24 overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full rounded-full bg-blue-500 transition-all"
+              className="h-full rounded-full bg-blue-500 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -165,25 +183,25 @@ const Tasks = () => {
       </div>
 
       {/* Task Board */}
-      <div className="grid gap-x-12 gap-y-10 lg:grid-cols-3">
+      <div className="grid w-full min-w-0 grid-cols-1 items-start gap-8 md:grid-cols-3 md:gap-6 xl:gap-10">
         {columns.map((column) => {
           const columnTasks = tasks.filter(
             (task) => task.status === column,
           );
 
           return (
-            <section key={column}>
-              {/* Column heading */}
+            <section key={column} className="w-full min-w-0">
+              {/* Column Heading */}
               <div className="mb-2 flex items-center gap-2">
-                {column === "Completed" && (
+                {column === "done" && (
                   <CheckCircle2
-                    className="size-3.5 text-emerald-400/70"
+                    className="size-3.5 shrink-0 text-emerald-400/70"
                     strokeWidth={1.75}
                   />
                 )}
 
                 <h2 className="text-xs font-medium text-slate-400">
-                  {column}
+                  {columnLabels[column]}
                 </h2>
 
                 <span className="text-[11px] tabular-nums text-slate-600">
@@ -192,7 +210,7 @@ const Tasks = () => {
               </div>
 
               {/* Tasks */}
-              <div>
+              <div className="w-full min-w-0">
                 {columnTasks.map((task) => {
                   const previousStatus = getPreviousStatus(task.status);
                   const nextStatus = getNextStatus(task.status);
@@ -200,17 +218,17 @@ const Tasks = () => {
                   return (
                     <div
                       key={task.id}
-                      className="group relative border-b border-white/6 py-4 pl-3 transition-colors hover:bg-white/1.5"
+                      className="group relative w-full min-w-0 border-b border-white/6 py-4 pl-3 transition-colors hover:bg-white/2"
                     >
-                      {/* Priority indicator */}
+                      {/* Priority Indicator */}
                       <span
                         className={`absolute left-0 top-4.5 h-3 w-0.5 rounded-full ${priorityStyles[task.priority]}`}
                       />
 
                       {/* Title */}
                       <p
-                        className={`pr-2 text-[13px] leading-relaxed ${
-                          task.status === "Completed"
+                        className={`wrap-break-word pr-2 text-[13px] leading-relaxed ${
+                          task.status === "done"
                             ? "text-slate-600 line-through"
                             : "text-slate-300"
                         }`}
@@ -218,23 +236,36 @@ const Tasks = () => {
                         {task.title}
                       </p>
 
+                      {/* Description */}
+                      {task.description && (
+                        <p className="mt-1 wrap-break-word pr-2 text-xs leading-relaxed text-slate-500">
+                          {task.description}
+                        </p>
+                      )}
+
                       {/* Metadata */}
-                      <div className="mt-2.5 flex items-center gap-2">
-                        <span className="text-[10.5px] text-slate-600">
+                      <div className="mt-3 flex w-full min-w-0 flex-nowrap items-center gap-1.5">
+                        <span className="shrink-0 text-[10px] text-slate-500">
                           {task.priority}
                         </span>
 
-                        <span className="text-slate-700">·</span>
+                        {task.due_date && (
+                          <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-500">
+                            {task.due_date}
+                          </span>
+                        )}
 
                         <Badge
                           variant="outline"
-                          className="h-5 rounded border-0 bg-white/4 px-1.5 text-[10px] font-normal text-slate-500"
+                          className="h-5 shrink-0 rounded border-0 bg-white/4 px-1.5 text-[10px] font-normal text-slate-500"
                         >
                           {task.tag}
                         </Badge>
 
                         {/* Actions */}
-                        <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="ml-auto flex shrink-0 items-center gap-0.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                          <EditTask tasks={task} />
+
                           {previousStatus && (
                             <Button
                               type="button"
@@ -242,13 +273,10 @@ const Tasks = () => {
                               size="icon"
                               className="size-6 text-slate-600 hover:bg-white/5 hover:text-slate-300"
                               aria-label="Move task backward"
-                              onClick={() => {
-                                console.log(
-                                  "Move task backward:",
-                                  task.id,
-                                  previousStatus,
-                                );
-                              }}
+                              disabled={updateTask.isPending}
+                              onClick={() =>
+                                moveTask(task.id, previousStatus)
+                              }
                             >
                               <ArrowLeft className="size-3" />
                             </Button>
@@ -261,13 +289,10 @@ const Tasks = () => {
                               size="icon"
                               className="size-6 text-slate-600 hover:bg-white/5 hover:text-slate-300"
                               aria-label="Move task forward"
-                              onClick={() => {
-                                console.log(
-                                  "Move task forward:",
-                                  task.id,
-                                  nextStatus,
-                                );
-                              }}
+                              disabled={updateTask.isPending}
+                              onClick={() =>
+                                moveTask(task.id, nextStatus)
+                              }
                             >
                               <ArrowRight className="size-3" />
                             </Button>
@@ -279,6 +304,7 @@ const Tasks = () => {
                             size="icon"
                             className="size-6 text-slate-600 hover:bg-red-500/5 hover:text-red-400"
                             aria-label="Delete task"
+                            disabled={deleteTask.isPending}
                             onClick={() => handleTaskDelete(task.id)}
                           >
                             <Trash2 className="size-3" />

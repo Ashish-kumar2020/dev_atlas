@@ -39,3 +39,30 @@ export const deleteTaskAPI = async (task_id: string) => {
   });
   return result.data;
 };
+
+
+export const UpdateTaskAPI = async (task_id: string,  payload: { status: "backlog" | "inProgress" | "done" },) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Authentication token not found");
+  }
+  const result = await apiClient.patch(`/task/${task_id}`, payload,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return result.data;
+};
+
+export const EditTaskAPI = async (task_id: string,  payload: TASK_POST_PAYLOAD) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Authentication token not found");
+  }
+  const result = await apiClient.patch(`/task/${task_id}`, payload,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return result.data;
+};

@@ -62,6 +62,8 @@ export const createTaskController = async (req: Request, res: Response) => {
 export const updateTaskController = async (req: Request, res: Response) => {
   try {
     const { task_id } = req.params;
+    const user_id = req.userId;
+
     if (typeof task_id !== "string") {
       return res.status(400).json({
         message: "Task Id is Required",
@@ -69,13 +71,13 @@ export const updateTaskController = async (req: Request, res: Response) => {
     }
 
     const {
-      user_id,
       task_title,
       task_description,
       status,
       priority,
       due_date,
     } = req.body;
+
     if (!user_id) {
       return res.status(400).json({
         message: "User_id is required",

@@ -43,3 +43,27 @@ export type TASK_POST_PAYLOAD = {
   priority: string;
   due_date: string;
 };
+
+
+export type ApiTask = {
+  id: string;
+  user_id: string;
+  task_title: string;
+  task_description: string;
+  status: "backlog" | "inProgress" | "done";
+  priority: "low" | "medium" | "high";
+  due_date: string;
+};
+
+
+export type TaskStatus ="backlog" | "inProgress" | "done";
+
+export type Task = {
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  priority: "High" | "Medium" | "Low";
+  tag: string;
+  due_date: string;
+};

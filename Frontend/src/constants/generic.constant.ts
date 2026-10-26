@@ -19,5 +19,7 @@ export const GENERIC_MESSAGE = {
     TASK_ADDED_SUCCESS : "Task Added successfully",
     TASK_ADDED_FAILED : "Error while adding task",
     TASK_DELETED_SUCCESS: "Task Deleted Successfully",
-    TASK_DELETED_FAILED: "Failed to Delete task"
+    TASK_DELETED_FAILED: "Failed to Delete task",
+    TASK_UPDATED_SUCCESS: "Task Updated Successfully",
+    TASK_UPDATED_FAILED: "Failed to Update task"
 } as const;
