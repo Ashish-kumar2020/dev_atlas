@@ -20,6 +20,7 @@ import Settings from "./pages/Settings/Settings";
 import CodePlayground from "./pages/CodeEditior/CodePlayground";
 import NotesInput from "./pages/Notes/NotesInput";
 import { Toaster } from "../@/components/ui/sonner";
+import {Subject} from "./pages/Subjects/Subject";
 // import Dashboard from "./pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <DashBoard />,
+      },
+      {
+        path: "subjects",
+        element: <Subject/>
       },
       {
         path: "notes",

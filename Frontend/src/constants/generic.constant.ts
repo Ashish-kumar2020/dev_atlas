@@ -21,5 +21,10 @@ export const GENERIC_MESSAGE = {
     TASK_DELETED_SUCCESS: "Task Deleted Successfully",
     TASK_DELETED_FAILED: "Failed to Delete task",
     TASK_UPDATED_SUCCESS: "Task Updated Successfully",
-    TASK_UPDATED_FAILED: "Failed to Update task"
+    TASK_UPDATED_FAILED: "Failed to Update task",
+
+
+    // --------------------------------- SUBJECT
+    SUBJECT_ADDED_SUCCESS : "Subject Added Successfully",
+    SUBJECT_ADDED_FAILED : "Subject Faild to Update Successfully"
 } as const;

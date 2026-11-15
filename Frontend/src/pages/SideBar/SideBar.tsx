@@ -26,7 +26,7 @@ const mainNavigation = [
   },
   {
     title: "Subjects",
-    url: "/subjects",
+    url: "/home/subjects",
     icon: BookOpen,
   },
   {

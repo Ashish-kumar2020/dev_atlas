@@ -4,7 +4,8 @@ import { deleteSubjectService, fetchAllSubjectsService, subjectCreationService, 
 // --------------------- SUBJECT CONTROLLER -----------------------------
 export const createSubjectController = async (req: Request, res: Response) => {
   try {
-    const { user_id, subject_name, description } = req.body;
+     const user_id = req.userId;
+    const { subject_name, description } = req.body;
     if (!user_id || !subject_name) {
       return res.status(400).json({
         message: "All Fileds are required",

@@ -5,8 +5,8 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 const subjectRouter = express.Router();
 
 subjectRouter.post("/", authMiddleware,createSubjectController);
-subjectRouter.patch("/subjects/:subject_id",  authMiddleware,updateSubjectController);
-subjectRouter.delete("/subjects/:subject_id",  authMiddleware,deleteSubjectController);
+subjectRouter.patch("/:subject_id",  authMiddleware,updateSubjectController);
+subjectRouter.delete("/:subject_id",  authMiddleware,deleteSubjectController);
 subjectRouter.get("/", authMiddleware,getAllSubjectsController)
 
 
