@@ -8,4 +8,4 @@ export const topicSchema = z.object({
   parent_topic_id: z.string().uuid().nullable()
 });
 
-export type SubjectFormData = z.infer<typeof topicSchema>
+export type TopicFormData = z.infer<typeof topicSchema>

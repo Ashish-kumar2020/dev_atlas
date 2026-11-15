@@ -13,9 +13,7 @@ import { Button } from "../../../@/components/ui/button";
 const Notes = () => {
   return (
     <div className="space-y-6">
-      {/* =========================================================
-          PAGE HEADER
-      ========================================================= */}
+
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -36,10 +34,6 @@ const Notes = () => {
           New note
         </Button>
       </div>
-
-      {/* =========================================================
-          SEARCH + FILTERS
-      ========================================================= */}
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         {/* Search */}
@@ -73,7 +67,6 @@ const Notes = () => {
           />
         </div>
 
-        {/* Filters */}
 
         <div className="flex items-center gap-1">
           <button
@@ -120,9 +113,7 @@ const Notes = () => {
         </div>
       </div>
 
-      {/* =========================================================
-          NOTES LIST
-      ========================================================= */}
+
 
       <ul className="divide-y divide-white/[0.08] rounded-md border border-white/[0.08] bg-[#0D151F] px-3">
         {/* Note 1 */}

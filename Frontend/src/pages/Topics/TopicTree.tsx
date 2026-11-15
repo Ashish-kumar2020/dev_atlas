@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   ChevronDown,
@@ -12,6 +11,7 @@ import type { TOPIC } from "./topic.types";
 
 import { Dialog, DialogTrigger } from "../../../@/components/ui/dialog";
 import AddTopic from "./AddTopic";
+import NotesInput from "../Notes/NotesInput";
 
 type TopicTreeProps = {
   topics: TOPIC[];
@@ -26,17 +26,13 @@ const TopicTree = ({
 }: TopicTreeProps) => {
   const [collapsedTopics, setCollapsedTopics] = useState<string[]>([]);
 
-  
-
   const currentTopics = topics.filter(
     (topic) => topic.parent_topic_id === parentTopicId,
   );
 
   const toggleTopic = (id: string) => {
     setCollapsedTopics((prev) =>
-      prev.includes(id)
-        ? prev.filter((item) => item !== id)
-        : [...prev, id],
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -85,13 +81,24 @@ const TopicTree = ({
               </button>
 
               <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  title="View notes"
-                  className="rounded-md p-1.5 text-slate-500 hover:bg-blue-500/10 hover:text-blue-400"
-                >
-                  <FileText className="size-3.5" />
-                </button>
+                <Dialog>
+                  <DialogTrigger
+                    render={
+                      <button
+                        type="button"
+                        title="View notes"
+                        className="rounded-md p-1.5 text-slate-500 hover:bg-blue-500/10 hover:text-blue-400"
+                      >
+                        <FileText className="size-3.5" />
+                      </button>
+                    }
+                  />
+
+                  <NotesInput/>
+                </Dialog>
+
+
+               
 
                 <Dialog>
                   <DialogTrigger
@@ -106,10 +113,7 @@ const TopicTree = ({
                     }
                   />
 
-                  <AddTopic
-                    subjectId={subjectId}
-                    parentTopicId={topic.id}
-                  />
+                  <AddTopic subjectId={subjectId} parentTopicId={topic.id} />
                 </Dialog>
               </div>
             </div>
