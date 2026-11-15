@@ -26,5 +26,10 @@ export const GENERIC_MESSAGE = {
 
     // --------------------------------- SUBJECT
     SUBJECT_ADDED_SUCCESS : "Subject Added Successfully",
-    SUBJECT_ADDED_FAILED : "Subject Faild to Update Successfully"
+    SUBJECT_ADDED_FAILED : "Subject Faild to Update",
+
+
+    // --------------------------------- TOPIC
+    TOPIC_ADDED_SUCCESS : "Topic Added Successfully",
+    TOPIC_ADDED_FAILED : "Topic Failed to Update"
 } as const;
